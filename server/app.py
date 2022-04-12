@@ -2,8 +2,8 @@ from subprocess import call
 
 from fastapi import FastAPI
 
-from helper import *
-from models import *
+from .helper import *
+from .models import *
 
 app = FastAPI(
     title='OCR API',

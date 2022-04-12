@@ -8,7 +8,7 @@ from typing import List
 import requests
 from fastapi import HTTPException
 
-from models import *
+from .models import *
 
 # This is the reference to convert language codes to language name
 LANGUAGES = {
