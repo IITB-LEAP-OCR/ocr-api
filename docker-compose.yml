@@ -1,0 +1,26 @@
+version: '3.7'
+services: 
+  db:
+    image: mongo:latest
+    container_name: mongodb
+    user: 1000:1000
+    ports:
+      - 27017:27017
+    volumes: 
+      - /home/krishna/mongodb/db:/data/db
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - /data:/data
+
+  app:
+    build: .
+    container_name: imaging_container
+    ports:
+      - 8888:8888
