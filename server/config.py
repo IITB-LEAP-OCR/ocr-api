@@ -16,3 +16,6 @@ AUTH_ALGORITHM = 'HS256'
 AUTH_SECRET_KEY = '6e7603195a6463ac16babb3b8542eb4a8ed3a8b104ea3367'
 
 PUBLIC_IP = 'http://127.0.0.1:8888'
+
+# waiting time for the code to sleep after loading the model to memory (in seconds)
+WAIT_TIME_AFTER_LOADING_MODEL = 5
