@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 from os.path import join
+from subprocess import call
 from typing import List
 
 import requests
@@ -26,6 +27,16 @@ LANGUAGES = {
 	'ori': 'oriya',
 	'ur': 'urdu',
 }
+
+def load_model(modality: str, language: str) -> None:
+    """
+    This function calls the load_v0.sh bash file to start the
+    model flask server.
+    """
+    call(
+        f'./load_v0.sh {modality} {language} /home/ocr/website/images',
+        shell=True
+    )
 
 def process_image_content(image_content: str, savename: str) -> None:
     """
