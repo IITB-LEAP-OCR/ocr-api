@@ -3,7 +3,7 @@ import json
 import os
 import shutil
 from os.path import join
-from subprocess import call
+from subprocess import call, check_output
 from typing import List
 
 import requests
@@ -28,15 +28,35 @@ LANGUAGES = {
 	'ur': 'urdu',
 }
 
+def check_loaded_model():
+	"""
+	This function run the docker container ls on the host and checks
+	if any docker container is already running for ocr.
+	if running then it returns the language of the container
+	"""
+	command = 'docker container ls --format "{{.Names}}"'
+	a = check_output(command, shell=True).decode('utf-8').strip().split('\n')
+	a = [i.strip() for i in a if i.strip().startswith('infer')]
+	if a:
+		return a[0].split('-')[1].strip()
+	else:
+		return None
+	
+
 def load_model(modality: str, language: str) -> None:
 	"""
 	This function calls the load_v0.sh bash file to start the
 	model flask server.
 	"""
-	call(
-		f'./load_v0.sh {modality} {language} /home/ocr/website/images',
-		shell=True
-	)
+	loaded_model = check_loaded_model()
+	if loaded_model is None or loaded_model != language:
+		print('loading the new model')
+		call(
+			f'./load_v0.sh {modality} {language} /home/ocr/website/images',
+			shell=True
+		)
+	else:
+		print('model already loaded. No need to reload')
 
 def process_image_content(image_content: str, savename: str) -> None:
 	"""
