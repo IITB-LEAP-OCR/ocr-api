@@ -22,7 +22,7 @@ LANGUAGES = {
 	'pa': 'punjabi',
 	'bn': 'bengali',
 	'ml': 'malayalam',
-	'asa': 'assamese',
+	'as': 'assamese',
 	'mni': 'manipuri',
 	'ori': 'oriya',
 	'ur': 'urdu',
@@ -139,7 +139,9 @@ def process_ocr_output(language_code: str) -> OCRResponse:
 		a = open('/home/ocr/website/images/out.json', 'r').read().strip()
 		a = json.loads(a)
 		a = [(i, a[i]) for i in a]
-		a = sorted(a, key=lambda x:int(x[0].split('.')[0]))
+		print(a)
+		if len(a)>1:
+			a = sorted(a, key=lambda x:int(x[0].split('.')[0]))
 		a = [Sentence(source=i[1]) for i in a]
 	except Exception as e:
 		print(e)

@@ -7,8 +7,8 @@
 
 LANGUAGE="$1"
 
-if [[ ! "$LANGUAGE" =~ ^(marathi|assamese|hindi|gujrati|gurumukhi|manipuri|bengali|oriya|punjabi|tamil|telugu|urdu|kannada|malayalam)$ ]]; then
-	echo "Please enter a valid language (assamese, hindi, gujrati, gurumukhi, bengali, odia, punjabi, tamil, telugu, urdu, kannada, malayalam)"
+if [[ ! "$LANGUAGE" =~ ^(marathi|assamese|hindi|gujarati|gurumukhi|manipuri|bengali|oriya|punjabi|tamil|telugu|urdu|kannada|malayalam)$ ]]; then
+	echo "Please enter a valid language (assamese, hindi, gujarati, gurumukhi, bengali, odia, punjabi, tamil, telugu, urdu, kannada, malayalam)"
 	exit
 fi
 
