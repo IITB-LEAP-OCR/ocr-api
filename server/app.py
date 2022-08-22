@@ -42,12 +42,7 @@ async def handwritten_version_0(
 ):
 	path = process_images(ocr_request.image)
 	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		print('loading the model')
-		call(
-			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
-			shell=True
-		)
+	load_model('handwritten', language)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -66,11 +61,7 @@ async def printed_version_0(
 ):
 	path = process_images(ocr_request.image)
 	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		call(
-			f'./load_v0.sh printed {language} /home/ocr/website/images',
-			shell=True
-		)
+	load_model('printed', language)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -89,11 +80,7 @@ async def scenetext_version_0(
 ):
 	path = process_images(ocr_request.image)
 	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		call(
-			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
-			shell=True
-		)
+	load_model('scene_text', language)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
