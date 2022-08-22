@@ -1,4 +1,3 @@
-import time
 from subprocess import call
 
 from fastapi import FastAPI, File, Form, Query
@@ -49,7 +48,6 @@ async def handwritten_version_0(
 			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -73,7 +71,6 @@ async def printed_version_0(
 			f'./load_v0.sh printed {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -97,7 +94,6 @@ async def scenetext_version_0(
 			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -124,7 +120,6 @@ async def handwritten_version_1(
 			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -148,7 +143,6 @@ async def printed_version_1(
 			f'./load_v0.sh printed {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -172,7 +166,6 @@ async def scenetext_version_1(
 			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -200,7 +193,6 @@ async def handwritten_version_2(
 			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -224,7 +216,6 @@ async def printed_version_2(
 			f'./load_v0.sh printed {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -248,7 +239,6 @@ async def scenetext_version_2(
 			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -279,7 +269,6 @@ async def handwritten_ocr_demo(
 			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
 
@@ -306,7 +295,6 @@ async def printed_ocr_demo(
 			f'./load_v0.sh printed {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	print('loaded the model. calling the inference')
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
@@ -334,6 +322,5 @@ async def scene_text_ocr_demo(
 			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
 			shell=True
 		)
-		time.sleep(WAIT_TIME_AFTER_LOADING_MODEL)
 	call(f'./infer.sh {language}', shell=True)
 	return process_ocr_output(language_code)
