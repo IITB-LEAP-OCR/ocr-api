@@ -5,7 +5,17 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
+class LevelEnum(str, Enum):
+	word = 'word'
+	char = 'char'
+
+class ModalityEnum(str, Enum):
+	printed = 'printed'
+	handwritten = 'handwritten'
+	scenetext = 'scenetext'
+
 class LanguageEnum(str, Enum):
+	en = 'en'	# english
 	hi = 'hi'	# hindi
 	mr = 'mr'	# marathi
 	ta = 'ta'	# tamil
@@ -19,24 +29,6 @@ class LanguageEnum(str, Enum):
 	ori = 'or'	# oriya
 	mni = 'mni'	# manipuri
 	ur = 'ur'	# urdu
-	# en = 'en'
-	# brx = 'brx'
-	# doi = 'doi'
-	# ks = 'ks'
-	# kok = 'kok'
-	# mai = 'mai'
-	# ne = 'ne'
-	# sd = 'sd'
-	# si = 'si'
-	# sat = 'sat'
-	# lus = 'lus'
-	# njz = 'njz'
-	# pnr = 'pnr'
-	# kha = 'kha'
-	# grt = 'grt'
-	# sa = 'sa'
-	# raj = 'raj'
-	# bho = 'bho'
 
 class LanguagePair(BaseModel):
 	"""
@@ -97,3 +89,36 @@ class OCRResponse(BaseModel):
 	"""
 	output: List[Sentence]
 	config: Optional[TranslationConfig]
+
+
+class OCRIn(BaseModel):
+	images: List[str]
+	language: LanguageEnum = 'en'
+	level: LevelEnum = 'word'
+	modality: ModalityEnum = 'printed'
+
+class OCROut(BaseModel):
+	text: List[str]
+
+
+class LayoutIn(BaseModel):
+	image: str
+
+
+class BoundingBox(BaseModel):
+	x: int = Field( description='X coordinate of the upper left point of bbox')
+	y: int = Field( description='Y coordinate of the upper left point of bbox')
+	w: int = Field( description='width of the bbox (in pixel)')
+	h: int = Field( description='height of the bbox (in pixel)')
+
+
+class Region(BaseModel):
+	bounding_box: BoundingBox
+	label: Optional[str] = ''
+	line: Optional[int] = Field(
+		0,
+		description='Stores the sequential line number of the para text starting from 1'
+	)
+
+class LayoutOut(BaseModel):
+	regions: List[Region]
