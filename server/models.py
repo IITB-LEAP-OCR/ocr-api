@@ -46,7 +46,6 @@ class ImageFile(BaseModel):
     imageContent: Optional[str] = Field(
         description='image content',
     )
-# class new_file()
 
 
 class Model(BaseModel):

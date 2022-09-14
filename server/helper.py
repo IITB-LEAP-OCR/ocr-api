@@ -37,31 +37,12 @@ def check_loaded_model() -> List[Tuple[str, str, str]]:
     if any docker container is already running for ocr.
     if running then it returns the language of the container
     """
-    command = 'docker container ls --format "{{.Names}}"'  # created or timestamp remove oldest (unload) then load new model this is in new fun
-    # call(f'./unload_oldest.sh')
-    # a = ['infer-handwritten-hindi-v0', 'cvat_ui', 'cvat_server', 'cvat_worker_low', 'cvat_utils',
-    #      'cvat_worker_default', 'cvat_opa', 'cvat_redis', 'traefik', 'cvat_db', 'pedantic_swartz']
+    command = 'docker container ls --format "{{.Names}}"'
 
     a = check_output(command, shell=True).decode('utf-8').strip().split('\n')
-    print("type of a debug ", a)
-    a = [i.strip() for i in a if i.strip().startswith('infer')]  # infer on;ly for ocr
-    print("nishiv of a debug ", a)
+    a = [i.strip() for i in a if i.strip().startswith('infer')]  
 
     return [tuple(i.strip().split('-')[1:]) for i in a]
-    # if a:
-    #     # infer-modality-hindi-v0 split[1] considers only language but u must take split[2] and split[3] includes versiona and modality
-    #     # a[0].split('-')[1].strip()
-    #     # for i in a:
-    #     #     print(str(i.split('-')[1].strip()+"-"+i.split('-')
-    #     #           [2].strip()+"-"+i.split('-')[3].strip()))
-    #     # return list(str(i.split('-')[1].strip()+"-"+i.split('-')
-    #     #                 [2].strip()+"-"+i.split('-')[3].strip()) for i in a)
-    # else:
-    #     return []  # returns list containing  curretnly running docker
-
-
-# infer-telugu-v0
-# check_loaded_model()
 
 
 def load_model(modality: str, language: str, modelid: str) -> None:  # added model id
@@ -70,28 +51,6 @@ def load_model(modality: str, language: str, modelid: str) -> None:  # added mod
     model flask server.
     """
     loaded_model = check_loaded_model()
-    print(f'Loaded models = {loaded_model}')
-    # loaded_model = 'handwritten-hindi-v0'
-    # loaded_model = ["handwritten-telugu-v0", "handwritten-hindi-v0",
-    #                 "handwritten-telugu-v1"]
-    # check in list of strings returned from loaded model
-    # if loaded_model is None or loaded_model != language:
-    #     print('loading the new model')
-    #     call(
-    #         f'./load_{modelid}.sh {modality} {language} /home/ocr/website/images',
-    #         shell=True
-    #     )
-    # else:
-    #     print('model already loaded. No need to reload')
-    # old_model = False
-        # old_model = True
-    # for i in loaded_model:
-    #     characteristic = list(i.split('-'))
-    #     # for j in i.split('-')
-    #     if (characteristic[0] == modality and characteristic[1] == language and characteristic[2] == modelid):
-    #         old_model = True
-    #         break
-    # if (not old_model):
     if tuple([modality, language, modelid]) not in loaded_model:
         if (len(loaded_model) >= NUMBER_LOADED_MODEL_THRESHOLD):  # make 4 dynamic
             print('unloading the oldest model')
@@ -105,7 +64,6 @@ def load_model(modality: str, language: str, modelid: str) -> None:  # added mod
         print('model already loaded. No need to reload')
 
 
-# load_model("handwritten", "hindi", "v0")
 
 
 def process_image_content(image_content: str, savename: str) -> None:
