@@ -43,10 +43,9 @@ class LanguageEnum(str, Enum):
 
 
 class ImageFile(BaseModel):
-    imageContent: Optional[str] = File(...)
-    # Field(
-    #     description='image content',
-    # )
+    imageContent: Optional[str] = Field(
+        description='image content',
+    )
 # class new_file()
 
 
@@ -104,3 +103,4 @@ class OCRResponse(BaseModel):
     """
     output: List[Sentence]
     meta: Optional[dict]
+

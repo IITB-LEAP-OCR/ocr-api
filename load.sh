@@ -5,12 +5,14 @@
 # server and load the model specified by the params in the memory.
 
 # unload all the loaded models before loading this model into memory
-echo "Removing all the existing models that are already loaded onto memory"
-bash unload_all.sh
+
+# echo "Removing all the existing models that are already loaded onto memory"
+# bash unload_all.sh
 
 MODALITY="$1"
 LANGUAGE="$2"
-DATA_DIR="$3"
+VERSION="$3"
+DATA_DIR="$4"
 
 if [[ ! "$LANGUAGE" =~ ^(marathi|assamese|hindi|gujarati|gurumukhi|manipuri|bengali|oriya|punjabi|tamil|telugu|urdu|kannada|malayalam)$ ]]; then
 	echo "Please enter a valid language (assamese, hindi, gujarati, gurumukhi, bengali, odia, punjabi, tamil, telugu, urdu, kannada, malayalam)"
@@ -44,7 +46,7 @@ else
 	echo -e "DATA_DIR\t$DATA_DIR"
 fi
 
-CONTAINER_NAME="infer-$(echo $LANGUAGE)-v0"
+CONTAINER_NAME="infer-$(echo $MODALITY)-$(echo $LANGUAGE)-$(echo $VERSION)"
 echo "Starting the inference in detached docker container: $CONTAINER_NAME"
 
 docker run -d --name=$CONTAINER_NAME --user $(id -u):$(id -g) --cpuset-cpus="0-2" --gpus all \

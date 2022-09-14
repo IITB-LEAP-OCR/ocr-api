@@ -1,0 +1,1 @@
+docker ps -q --filter=name=infer* | tail -n 1 | xargs docker rm -f
