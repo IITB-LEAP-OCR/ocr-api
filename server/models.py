@@ -1,14 +1,11 @@
 from enum import Enum
-from optparse import Option
-from random import choices
-from typing import Dict, List, Optional
-import base64
+from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, File, Form, Query
 from pydantic import BaseModel, Field
 
 
 class LanguageEnum(str, Enum):
+    en = 'en'  # english
     hi = 'hi'  # hindi
     mr = 'mr'  # marathi
     ta = 'ta'  # tamil
@@ -22,84 +19,60 @@ class LanguageEnum(str, Enum):
     ori = 'or'  # oriya
     mni = 'mni'  # manipuri
     ur = 'ur'  # urdu
-    # en = 'en'
-    # brx = 'brx'
-    # doi = 'doi'
-    # ks = 'ks'
-    # kok = 'kok'
-    # mai = 'mai'
-    # ne = 'ne'
-    # sd = 'sd'
-    # si = 'si'
-    # sat = 'sat'
-    # lus = 'lus'
-    # njz = 'njz'
-    # pnr = 'pnr'
-    # kha = 'kha'
-    # grt = 'grt'
-    # sa = 'sa'
-    # raj = 'raj'
-    # bho = 'bho'
 
+class ModalityEnum(str, Enum):
+    printed = 'printed'
+    handwritten = 'handwritten'
+    scene_text = 'scene_text'
 
-class ImageFile(BaseModel):
-    imageContent: Optional[str] = Field(
-        description='image content',
-    )
+class LevelEnum(str, Enum):
+    word = 'word'
+    line = 'line'
+    paragraph = 'paragraph'
+    page = 'page'
 
-
-class Model(BaseModel):
-    model: Optional[str] = Field(
-        description='model name [printed], handwritten, scene',)
-
-
-class Level(BaseModel):
-    word: Optional[str] = Field(
-        description='word',
-    )
-
-
-class LanguageCode(BaseModel):
-    language: Optional[str] = Field(
-        description='ISO 639-1 language codes',
-    )
-
-
-class ModelId(BaseModel):
-    version: Optional[str] = Field(
-        description='version of the model',)
-
-
-class InternalModelVer(BaseModel):
-    arg1: Optional[str] = Field(
-        description="to be given",)
-
-
-class OMIT(BaseModel):
-    meta: Optional[bool] = Field(
-        description="True ouputs the meta data in the response_model else it discards meta data",)
+class VersionEnum(str, Enum):
+    v0 = 'v0'
+    v1 = 'v1'
+    v2 = 'v2'
 
 
 class OCRRequest(BaseModel):
-    imageContent: List[ImageFile]
-    modality: Model
-    level: Level
-    language: LanguageCode
-    modelid: ModelId
-    internalModelVer: InternalModelVer
-    omit: OMIT
-
-
-class Sentence(BaseModel):
-    value: Optional[str] = Field(
-        description='to be used along with translation model. expected translated sentence, for reference',
+    imageContent: List[str]
+    modality: Optional[ModalityEnum] = Field(
+        ModalityEnum.printed,
+        description='Describes the modality of the model to be called'
+    )
+    level: Optional[LevelEnum] = Field(
+        LevelEnum.word,
+        description='Describes the detection level of the model to be called'
+    )
+    language: LanguageEnum
+    version: Optional[VersionEnum] = Field(
+        VersionEnum.v0,
+        description='Describes the version no of the models to be called (IIITH)'
+    )
+    modelid: Optional[str] = Field(
+        '',
+        description='Describes the ID/Key of the model to be called'
+    )
+    omit: Optional[bool] = Field(
+        True,
+        description='Sspecifies whether to omit the meta details from the OCRResponse'
+    )
+    meta: Optional[Dict[str, Any]] = Field(
+        {},
+        description='Extra meta details to give to the model'
     )
 
 
-class OCRResponse(BaseModel):
+class OCRImageResponse(BaseModel):
     """
-    description: the response for translation. Standard http status codes to be used.
+    This is the model placeholder for the ocr output of a single image
     """
-    output: List[Sentence]
-    meta: Optional[dict]
+    text: str
+    meta: Optional[Dict[str, Any]] = Field(
+        {},
+        description='Meta information given by model for each image'
+    )
 

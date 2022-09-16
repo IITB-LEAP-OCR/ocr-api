@@ -5,8 +5,8 @@
 # Thus, make sure that the correct docker container is already running before
 # calling this script
 
-LANGUAGE="$1"
-MODALITY="$2"
+MODALITY="$1"
+LANGUAGE="$2"
 VERSION="$3"
 
 if [[ ! "$LANGUAGE" =~ ^(marathi|assamese|hindi|gujarati|gurumukhi|manipuri|bengali|oriya|punjabi|tamil|telugu|urdu|kannada|malayalam)$ ]]; then
