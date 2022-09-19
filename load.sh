@@ -4,10 +4,6 @@
 # this script will start the docker container which in turn will run the flask
 # server and load the model specified by the params in the memory.
 
-# unload all the loaded models before loading this model into memory
-
-# echo "Removing all the existing models that are already loaded onto memory"
-# bash unload_all.sh
 
 MODALITY="$1"
 LANGUAGE="$2"
