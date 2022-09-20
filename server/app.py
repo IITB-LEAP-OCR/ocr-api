@@ -4,12 +4,15 @@ from fastapi import FastAPI
 
 from .helper import *
 from .models import OCRImageResponse, OCRRequest
+from .modules.cegis.routes import router as cegis_router
 
 app = FastAPI(
     title='OCR API',
     docs_url='/ocr/docs',
     openapi_url='/ocr/openapi.json'
 )
+
+app.include_router(cegis_router)
 
 
 @app.post(
