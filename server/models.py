@@ -1,6 +1,5 @@
 from enum import Enum
-from random import choices
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -15,110 +14,74 @@ class ModalityEnum(str, Enum):
 	scenetext = 'scenetext'
 
 class LanguageEnum(str, Enum):
-	en = 'en'	# english
-	hi = 'hi'	# hindi
-	mr = 'mr'	# marathi
-	ta = 'ta'	# tamil
-	te = 'te'	# telugu
-	kn = 'kn'	# kannada
-	gu = 'gu'	# gujarati
-	pa = 'pa'	# punjabi
-	bn = 'bn'	# bengali
-	ml = 'ml'	# malayalam
-	asa = 'as'	# assamese
-	ori = 'or'	# oriya
-	mni = 'mni'	# manipuri
-	ur = 'ur'	# urdu
+    en = 'en'  # english
+    hi = 'hi'  # hindi
+    mr = 'mr'  # marathi
+    ta = 'ta'  # tamil
+    te = 'te'  # telugu
+    kn = 'kn'  # kannada
+    gu = 'gu'  # gujarati
+    pa = 'pa'  # punjabi
+    bn = 'bn'  # bengali
+    ml = 'ml'  # malayalam
+    asa = 'as'  # assamese
+    ori = 'or'  # oriya
+    mni = 'mni'  # manipuri
+    ur = 'ur'  # urdu
 
-class LanguagePair(BaseModel):
-	"""
-	description: language pair, make targetLanguage null to reuse the
-	object to indicate single language
-	"""
-	sourceLanguageName: Optional[str] = Field(
-		description='human name associated with the language code',
-	)
-	sourceLanguage: LanguageEnum = Field(
-		description='Indic language code, iso-639-1, iso 639-2',
-	)
-	targetLanguage: Optional[LanguageEnum] = Field(
-		description='Indic language code, iso-639-1, iso 639-2',
-	)
-	targetLanguageName: Optional[str] = Field(
-		description='human name associated with the language code',
-	)
+class ModalityEnum(str, Enum):
+    printed = 'printed'
+    handwritten = 'handwritten'
+    scene_text = 'scene_text'
 
-class OCRConfig(BaseModel):
-	modelId: Optional[str] = Field(
-		description='Unique identifier of model',
-	)
-	language: LanguagePair
+class LevelEnum(str, Enum):
+    word = 'word'
+    line = 'line'
+    paragraph = 'paragraph'
+    page = 'page'
 
-class ImageFile(BaseModel):
-	imageContent: Optional[str] = Field(
-		description='image content',
-	)
-	imageUri: Optional[str] = Field(
-		description='path on gcp/s3 bucket or https url',
-	)
+class VersionEnum(str, Enum):
+    v0 = 'v0'
+    v1 = 'v1'
+    v2 = 'v2'
+
 
 class OCRRequest(BaseModel):
-	image: List[ImageFile]
-	config: OCRConfig
+    imageContent: List[str]
+    modality: Optional[ModalityEnum] = Field(
+        ModalityEnum.printed,
+        description='Describes the modality of the model to be called'
+    )
+    level: Optional[LevelEnum] = Field(
+        LevelEnum.word,
+        description='Describes the detection level of the model to be called'
+    )
+    language: LanguageEnum
+    version: Optional[VersionEnum] = Field(
+        VersionEnum.v0,
+        description='Describes the version no of the models to be called (IIITH)'
+    )
+    modelid: Optional[str] = Field(
+        '',
+        description='Describes the ID/Key of the model to be called'
+    )
+    omit: Optional[bool] = Field(
+        True,
+        description='Sspecifies whether to omit the meta details from the OCRResponse'
+    )
+    meta: Optional[Dict[str, Any]] = Field(
+        {},
+        description='Extra meta details to give to the model'
+    )
 
 
-class TranslationConfig(BaseModel):
-	modelId: Optional[str] = Field(
-		description='Unique identifier of model',
-	)
-	language: LanguagePair
+class OCRImageResponse(BaseModel):
+    """
+    This is the model placeholder for the ocr output of a single image
+    """
+    text: str
+    meta: Optional[Dict[str, Any]] = Field(
+        {},
+        description='Meta information given by model for each image'
+    )
 
-
-class Sentence(BaseModel):
-	source: str = Field(
-		description='input sentence for the model',
-	)
-	target: Optional[str] = Field(
-		description='to be used along with translation model. expected translated sentence, for reference',
-	)
-
-
-class OCRResponse(BaseModel):
-	"""
-	description: the response for translation. Standard http status codes to be used.
-	"""
-	output: List[Sentence]
-	config: Optional[TranslationConfig]
-
-
-class OCRIn(BaseModel):
-	images: List[str]
-	language: LanguageEnum = 'en'
-	level: LevelEnum = 'word'
-	modality: ModalityEnum = 'printed'
-
-class OCROut(BaseModel):
-	text: List[str]
-
-
-class LayoutIn(BaseModel):
-	image: str
-
-
-class BoundingBox(BaseModel):
-	x: int = Field( description='X coordinate of the upper left point of bbox')
-	y: int = Field( description='Y coordinate of the upper left point of bbox')
-	w: int = Field( description='width of the bbox (in pixel)')
-	h: int = Field( description='height of the bbox (in pixel)')
-
-
-class Region(BaseModel):
-	bounding_box: BoundingBox
-	label: Optional[str] = ''
-	line: Optional[int] = Field(
-		0,
-		description='Stores the sequential line number of the para text starting from 1'
-	)
-
-class LayoutOut(BaseModel):
-	regions: List[Region]

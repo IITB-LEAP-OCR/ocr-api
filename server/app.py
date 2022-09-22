@@ -1,327 +1,34 @@
 from subprocess import call
 
-from fastapi import FastAPI, File, Form, Query
+from fastapi import FastAPI
 
-from .config import *
 from .helper import *
-from .models import *
-
-# from .modules.productlabs.routes import router as pl_router
+from .models import OCRImageResponse, OCRRequest
+from .modules.cegis.routes import router as cegis_router
 
 app = FastAPI(
-	title='OCR API',
-	docs_url='/ocr/docs',
-	openapi_url='/ocr/openapi.json'
+    title='OCR API',
+    docs_url='/ocr/docs',
+    openapi_url='/ocr/openapi.json'
 )
+
+app.include_router(cegis_router)
 
 
 @app.post(
-	'/ocr/v0/load',
-	tags=['Helper'],
+    '/ocr/infer',
+    tags=['OCR'],
+    response_model=List[OCRImageResponse],
+    response_model_exclude_none=True
 )
-async def load_v0_model_to_memory(
-	modality: str,
-	language: str,
-):
-	"""
-	This endpoint only takes the modality and language as input and
-	loads the corresponding model into memory by starting the docker flask container
-	"""
-	load_model(modality, language)
-	return {'detail': 'model loaded into memory'}
+def infer_ocr(
+    ocr_request: OCRRequest,
+) -> List[OCRImageResponse]:
+    path = process_images(ocr_request.imageContent)
 
-@app.post(
-	'/ocr/v0/handwritten',
-	tags=['Version-0'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def handwritten_version_0(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	load_model('handwritten', language)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-@app.post(
-	'/ocr/v0/printed',
-	tags=['Version-0'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def printed_version_0(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	load_model('printed', language)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-@app.post(
-	'/ocr/v0/scenetext',
-	tags=['Version-0'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def scenetext_version_0(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	load_model('scene_text', language)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-
-
-@app.post(
-	'/ocr/v1/handwritten',
-	tags=['Version-1'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def handwritten_version_1(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		print('loading the model')
-		call(
-			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-@app.post(
-	'/ocr/v1/printed',
-	tags=['Version-1'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def printed_version_1(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		call(
-			f'./load_v0.sh printed {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-@app.post(
-	'/ocr/v1/scenetext',
-	tags=['Version-1'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def scenetext_version_1(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		call(
-			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-
-
-
-@app.post(
-	'/ocr/v2/handwritten',
-	tags=['Version-2'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def handwritten_version_2(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		print('loading the model')
-		call(
-			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-@app.post(
-	'/ocr/v2/printed',
-	tags=['Version-2'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def printed_version_2(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		call(
-			f'./load_v0.sh printed {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-@app.post(
-	'/ocr/v2/scenetext',
-	tags=['Version-2'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def scenetext_version_2(
-	ocr_request: OCRRequest,
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = process_images(ocr_request.image)
-	language_code, language = process_config(ocr_request.config)
-	if not preloaded:
-		call(
-			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-
-
-
-
-
-@app.post(
-	'/ocr/demo/handwritten',
-	tags=['Demo'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def handwritten_ocr_demo(
-	images: List[UploadFile] = File(...),
-	language_code: LanguageEnum = Form(...),
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = save_uploaded_images(images)
-	language = LANGUAGES[language_code]
-	if not preloaded:
-		print('loading the model')
-		call(
-			f'./load_v0.sh handwritten {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-
-@app.post(
-	'/ocr/demo/printed',
-	tags=['Demo'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def printed_ocr_demo(
-	images: List[UploadFile] = File(...),
-	language_code: LanguageEnum = Form(...),
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = save_uploaded_images(images)
-	language = LANGUAGES[language_code]
-	if not preloaded:
-		print('loading the model')
-		call(
-			f'./load_v0.sh printed {language} /home/ocr/website/images',
-			shell=True
-		)
-	print('loaded the model. calling the inference')
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-
-@app.post(
-	'/ocr/demo/scene_text',
-	tags=['Demo'],
-	response_model=OCRResponse,
-	response_model_exclude_none=True
-)
-async def scene_text_ocr_demo(
-	images: List[UploadFile] = File(...),
-	language_code: LanguageEnum = Form(...),
-	preloaded: Optional[bool] = Query(
-		False,
-		description='enable only if you want to the infer using a preloaded model'
-	)
-):
-	path = save_uploaded_images(images)
-	language = LANGUAGES[language_code]
-	if not preloaded:
-		print('loading the model')
-		call(
-			f'./load_v0.sh scene_text {language} /home/ocr/website/images',
-			shell=True
-		)
-	call(f'./infer.sh {language}', shell=True)
-	return process_ocr_output(language_code)
-
-
-
-@app.post('/ocr/pl', response_model=OCROut, tags=['ProductLabs'])
-async def pl_ocr(data: OCRIn):
-	print(data)
-
-
-@app.post('/layout/pl', response_model=LayoutOut, tags=['ProductLabs'])
-async def pl_layout(data: LayoutIn):
-	print(data)
+    _, language = process_language(ocr_request.language)
+    version = process_version(ocr_request.version)
+    modality = process_modality(ocr_request.modality)
+    load_model(modality, language, version)
+    call(f'./infer.sh {modality} {language} {version}', shell=True)
+    return process_ocr_output()
