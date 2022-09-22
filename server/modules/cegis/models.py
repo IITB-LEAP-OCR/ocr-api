@@ -6,12 +6,12 @@ from pydantic import BaseModel, Field
 
 
 class OCRRequest(BaseModel):
-    images: List[str]
+	images: List[str]
 
 
 class OCRImageResponse(BaseModel):
-    """
-    This is the model placeholder for the ocr output of a single image
-    """
-    text: str
+	"""
+	This is the model placeholder for the ocr output of a single image
+	"""
+	text: str
 
