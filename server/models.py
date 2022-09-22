@@ -24,8 +24,8 @@ class LanguageEnum(str, Enum):
 	pa = 'pa'  # punjabi
 	bn = 'bn'  # bengali
 	ml = 'ml'  # malayalam
-	asa = 'as'  # assamese
-	ori = 'or'  # oriya
+	asa = 'asa'  # assamese
+	ori = 'ori'  # oriya
 	mni = 'mni'  # manipuri
 	ur = 'ur'  # urdu
 

@@ -24,7 +24,7 @@ LANGUAGES = {
 	'pa': 'punjabi',
 	'bn': 'bengali',
 	'ml': 'malayalam',
-	'as': 'assamese',
+	'asa': 'assamese',
 	'mni': 'manipuri',
 	'ori': 'oriya',
 	'ur': 'urdu',

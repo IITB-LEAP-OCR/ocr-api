@@ -1,11 +1,17 @@
 #!/bin/bash
 
+# Given the set of params such as modality, language, and image data dir.
+# this script will start the docker container which in turn will run the flask
+# server and load the model specified by the params in the memory.
+
+
 MODALITY="$1"
 LANGUAGE="$2"
-DATA_DIR="$3"
+VERSION="v2"
+DATA_DIR="/home/ocr/website/images"
 
-if [[ ! "$LANGUAGE" =~ ^(marathi|assamese|hindi|gujrati|gurumukhi|manipuri|bengali|oriya|punjabi|tamil|telugu|urdu|kannada|malayalam)$ ]]; then
-	echo "Please enter a valid language (assamese, hindi, gujrati, gurumukhi, bengali, odia, punjabi, tamil, telugu, urdu, kannada, malayalam)"
+if [[ ! "$LANGUAGE" =~ ^(marathi|assamese|hindi|gujarati|gurumukhi|manipuri|bengali|oriya|punjabi|tamil|telugu|urdu|kannada|malayalam)$ ]]; then
+	echo "Please enter a valid language (assamese, hindi, gujarati, gurumukhi, bengali, odia, punjabi, tamil, telugu, urdu, kannada, malayalam)"
 	exit
 fi
 
@@ -19,8 +25,6 @@ fi
 echo "Performing Inference for $LANGUAGE $MODALITY Task"
 
 MODEL_DIR="/home/ajoy/0_ajoy_experiments/$MODALITY/3_trained_model/2_version/$LANGUAGE"
-LEX_DIR="/home/ajoy/0_ajoy_experiments/0_lexicon/$LANGUAGE"
-LEX_DIR+="_lexicon.txt"
 
 echo "Checking for model dir"
 if [ ! -d "$MODEL_DIR" ]; then
@@ -38,12 +42,11 @@ else
 	echo -e "DATA_DIR\t$DATA_DIR"
 fi
 
-CONTAINER_NAME="$(echo $LANGUAGE)-v1-infer"
+CONTAINER_NAME="infer-$(echo $MODALITY)-$(echo $LANGUAGE)-$(echo $VERSION)"
 echo "Starting the inference in detached docker container: $CONTAINER_NAME"
 
-docker run --rm --name=$CONTAINER_NAME --user $(id -u):$(id -g) --cpuset-cpus="0-2" --gpus all \
-	--shm-size 8G \
+docker run --rm --name=$CONTAINER_NAME --cpuset-cpus="0-2" --gpus all \
 	-v $MODEL_DIR:/model:ro \
 	-v $DATA_DIR:/data \
-	ocr:handwritten-v2 \
-	bash infer.sh $LANGUAGE
+	ocr:v2 \
+	python infer.py $LANGUAGE
