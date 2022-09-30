@@ -3,6 +3,7 @@ from subprocess import call
 
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .helper import *
@@ -14,6 +15,14 @@ app = FastAPI(
 	title='OCR API',
 	docs_url='/ocr/docs',
 	openapi_url='/ocr/openapi.json'
+)
+
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=['*'],
+	allow_methods=['*'],
+	allow_headers=['*'],
+	allow_credentials=True,
 )
 
 app.include_router(cegis_router)
