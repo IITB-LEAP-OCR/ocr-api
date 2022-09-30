@@ -60,4 +60,6 @@ def infer_ocr(
 		call(f'./infer_v2.sh {modality} {language}', shell=True)
 	elif version == 'v2_bilingual':
 		call(f'./infer_v2_bilingual.sh {modality} {language}', shell=True)
+	elif version == 'v2_robust':
+		call(f'./infer_v2_robust.sh {modality} {language}', shell=True)
 	return process_ocr_output()
