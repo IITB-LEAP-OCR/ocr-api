@@ -44,7 +44,7 @@ fi
 CONTAINER_NAME="infer-$(echo $MODALITY)-$(echo $LANGUAGE)-$(echo $VERSION)"
 echo "Starting the inference in detached docker container: $CONTAINER_NAME"
 
-docker run --rm --name=$CONTAINER_NAME --gpus all \
+docker run --rm --name=$CONTAINER_NAME --gpus all --net host \
 	-v $MODEL_DIR:/model:ro \
 	-v $DATA_DIR:/data \
 	ocr:v2_robust \
