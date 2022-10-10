@@ -29,8 +29,6 @@ app.include_router(cegis_router)
 app.include_router(ulca_router)
 
 
-
-
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
 	exc_str = f'{exc}'.replace('\n', ' ').replace('   ', ' ')
@@ -48,7 +46,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 def infer_ocr(
 	ocr_request: OCRRequest,
 ) -> List[OCRImageResponse]:
-	path = process_images(ocr_request.imageContent)
+	process_images(ocr_request.imageContent)
 
 	_, language = process_language(ocr_request.language)
 	version = process_version(ocr_request.version)

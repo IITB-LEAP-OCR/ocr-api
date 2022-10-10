@@ -1,12 +1,11 @@
 import base64
 import json
 import os
-import shutil
 from os.path import join
 from subprocess import call, check_output
 from typing import List, Tuple
 
-from fastapi import HTTPException, UploadFile
+from fastapi import HTTPException
 
 from server.config import NUMBER_LOADED_MODEL_THRESHOLD
 
@@ -45,7 +44,7 @@ def check_loaded_model() -> List[Tuple[str, str, str]]:
 	return [tuple(i.split('-')[1:]) for i in a]
 
 
-def load_model(modality: str, language: str, modelid: str) -> None:  # added model id
+def load_model(modality: str, language: str, modelid: str) -> None:
 	"""
 	This function calls the load_v0.sh bash file to start the
 	model flask server.
@@ -77,7 +76,7 @@ def process_image_content(image_content: str, savename: str) -> None:
 		f.write(base64.b64decode(image_content))
 
 
-def process_images(images: List[str]):
+def process_images(images: List[str]) -> None:
 	"""
 	processes all the images in the given list.
 	it saves all the images in the /home/ocr/website/images folder and
@@ -101,7 +100,7 @@ def process_images(images: List[str]):
 			)
 
 
-def process_language(lcode):
+def process_language(lcode: LanguageEnum) -> Tuple[str, str]:
 	global LANGUAGES
 	if (lcode != None):
 		try:
@@ -121,11 +120,11 @@ def process_language(lcode):
 	return (language_code.value, language)
 
 
-def process_modality(modal_type):
+def process_modality(modal_type: ModalityEnum) -> str:
 	return modal_type.value
 
 
-def process_version(ver_no):
+def process_version(ver_no: VersionEnum) -> str:
 	return ver_no.value
 
 
@@ -146,16 +145,3 @@ def process_ocr_output() -> List[OCRImageResponse]:
 			status_code=500,
 			detail='Error while parsing the ocr output'
 		)
-
-
-# def save_uploaded_images(files: List[UploadFile]) -> str:
-#     print('removing all the previous uploaded files from the image folder')
-#     IMAGE_FOLDER = '/home/ocr/website/imagesh'
-#     os.system(f'rm -rf {IMAGE_FOLDER}/*')
-#     print(f'Saving {len(files)} to location: {IMAGE_FOLDER}')
-#     for image in files:
-#         location = join(IMAGE_FOLDER, f'{image.filename}')
-#         with open(location, 'wb') as f:
-#             shutil.copyfileobj(image.file, f)
-#     return IMAGE_FOLDER
-
