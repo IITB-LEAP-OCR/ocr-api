@@ -3,11 +3,13 @@ import imghdr
 import json
 import os
 import shutil
+from datetime import datetime
 from os.path import join
 from tempfile import TemporaryDirectory
 from typing import List
 from uuid import uuid4
 
+import pytz
 import requests
 from fastapi import HTTPException
 from PIL import Image
@@ -30,6 +32,18 @@ LANGUAGES = {
 	'or': 'oriya',
 	'ur': 'urdu',
 }
+
+async def save_logs(request, response):
+	dt = datetime.now(pytz.timezone('Asia/Kolkata')).isoformat()
+	ret = {
+		'ip_addr': str(request.client.host),
+		'timestamp': dt,
+		'request': await request.json(),
+		'response': response.dict(),
+	}
+	dt = dt.strip().split('+')[0]
+	with open('/home/ocr/ulca_logs/{}.json'.format(dt), 'w', encoding='utf-8') as f:
+		json.dump(ret, f, indent=4)
 
 def process_image_content(image_content: str, savename: str) -> None:
 	"""
