@@ -9,7 +9,6 @@ from fastapi.responses import JSONResponse
 from .helper import *
 from .models import OCRImageResponse, OCRRequest
 from .modules.cegis.routes import router as cegis_router
-from .modules.preprocess.routes import router as preprocess_router
 from .modules.ulca.routes import router as ulca_router
 
 app = FastAPI(
@@ -28,7 +27,6 @@ app.add_middleware(
 
 app.include_router(cegis_router)
 app.include_router(ulca_router)
-app.include_router(preprocess_router)
 
 
 

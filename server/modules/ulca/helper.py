@@ -6,6 +6,7 @@ import shutil
 from os.path import join
 from tempfile import TemporaryDirectory
 from typing import List
+from uuid import uuid4
 
 import requests
 from fastapi import HTTPException
@@ -35,10 +36,15 @@ def process_image_content(image_content: str, savename: str) -> None:
 	input the base64 encoded image and saves the image inside the folder.
 	savename is the name of the image to be saved as
 	"""
+	print('received image as base64')
 	savefolder = '/home/ocr/website/images'
 	assert isinstance(image_content, str)
 	with open(join(savefolder, savename), 'wb') as f:
 		f.write(base64.b64decode(image_content))
+	os.system('cp {} /home/ocr/ulca_images/{}.jpg'.format(
+		join(savefolder, savename),
+		str(uuid4())
+	))
 
 
 def process_image_url(image_url: str, savename: str) -> None:
@@ -46,6 +52,7 @@ def process_image_url(image_url: str, savename: str) -> None:
 	input the url of the image and download and saves the image inside the folder.
 	savename is the name of the image to be saved as
 	"""
+	print('received image as URL')
 	tmp = TemporaryDirectory(prefix='save_image')
 	savefolder = '/home/ocr/website/images'
 	r = requests.get(image_url, stream=True)
