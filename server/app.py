@@ -51,13 +51,16 @@ def infer_ocr(
 	_, language = process_language(ocr_request.language)
 	version = process_version(ocr_request.version)
 	modality = process_modality(ocr_request.modality)
+	print(language, version, modality)
 	if version == 'v0':
 		load_model(modality, language, version)
 		call(f'./infer_v0.sh {modality} {language}', shell=True)
 	elif version == 'v2':
 		call(f'./infer_v2.sh {modality} {language}', shell=True)
-	elif version == 'v2_bilingual':
+	elif version == 'v2_bilingual' and modality == 'printed':
 		call(f'./infer_v2_bilingual.sh {modality} {language}', shell=True)
-	elif version == 'v2_robust':
+	elif version == 'v2_robust' and modality == 'printed':
 		call(f'./infer_v2_robust.sh {modality} {language}', shell=True)
+	elif version == 'v3_bilingual' and modality == 'printed' and language == 'telugu':
+		call(f'./infer_v3_bilingual.sh {modality} {language}', shell=True)
 	return process_ocr_output()
