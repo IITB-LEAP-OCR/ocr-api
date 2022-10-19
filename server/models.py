@@ -46,6 +46,7 @@ class VersionEnum(str, Enum):
 	v2_bilingual = 'v2_bilingual'
 	v2_robust = 'v2_robust'
 	v3_bilingual = 'v3_bilingual'
+	v3_1_bilingual = 'v3.1_bilingual'
 
 
 class OCRRequest(BaseModel):
