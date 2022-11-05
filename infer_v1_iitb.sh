@@ -49,7 +49,7 @@ echo "Starting the inference in detached docker container: $CONTAINER_NAME"
 
 docker run --rm --name=$CONTAINER_NAME --gpus all --net host \
 	-v $MODEL_DIR:/model:ro \
-	-v $DOCTR_DIR:/root/.cache/doctr:ro
+	-v $DOCTR_DIR:/root/.cache/doctr:ro \
 	-v $DATA_DIR:/data \
 	ocr:v1_iitb \
 	python infer.py $LANGUAGE
