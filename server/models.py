@@ -45,6 +45,7 @@ class VersionEnum(str, Enum):
 	v2 = 'v2'
 	v2_bilingual = 'v2_bilingual'
 	v2_robust = 'v2_robust'
+	v2_1_robust = 'v2.1_robust'
 	v3_bilingual = 'v3_bilingual'
 	v3_1_bilingual = 'v3.1_bilingual'
 	v1_iitb = 'v1_iitb'

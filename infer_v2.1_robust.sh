@@ -7,25 +7,23 @@
 
 MODALITY="$1"
 LANGUAGE="$2"
-VERSION="v2"
+VERSION="v2.1_robust"
 DATA_DIR="/home/ocr/website/images"
 
-if [[ ! "$LANGUAGE" =~ ^(marathi|assamese|hindi|gujarati|gurumukhi|manipuri|bengali|oriya|punjabi|tamil|telugu|urdu|kannada|malayalam)$ ]]; then
-	echo "Please enter a valid language (assamese, hindi, gujarati, gurumukhi, bengali, odia, punjabi, tamil, telugu, urdu, kannada, malayalam)"
+if [[ ! "$LANGUAGE" =~ ^(telugu)$ ]]; then
+	echo "Please enter a valid language (telugu)"
 	exit
 fi
 
-
-if [[ ! "$MODALITY" =~ ^(handwritten|scene_text|printed)$ ]]; then
-	echo "Please enter a valid modality (handwritten, scene_text, printed)"
+if [[ ! "$MODALITY" =~ ^(printed)$ ]]; then
+	echo "Please enter a valid modality (printed)"
 	exit
 fi
 
 
 echo "Performing Inference for $LANGUAGE $MODALITY Task"
 
-# MODEL_DIR="/home/ajoy/0_ajoy_experiments/$MODALITY/3_trained_model/2_version/$LANGUAGE"
-MODEL_DIR="/home/ocr/models/pretrained/2_version/$MODALITY/$LANGUAGE"
+MODEL_DIR="/home/ocr/models/pretrained/2.1_version_robust/$MODALITY/$LANGUAGE"
 
 echo "Checking for model dir"
 if [ ! -d "$MODEL_DIR" ]; then
@@ -49,5 +47,5 @@ echo "Starting the inference in detached docker container: $CONTAINER_NAME"
 docker run --rm --name=$CONTAINER_NAME --gpus all --net host \
 	-v $MODEL_DIR:/model:ro \
 	-v $DATA_DIR:/data \
-	ocr:v2 \
+	ocr:v2.1_robust \
 	python infer.py $LANGUAGE

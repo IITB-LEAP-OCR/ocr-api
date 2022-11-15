@@ -63,6 +63,8 @@ def infer_ocr(
 		call(f'./infer_v2_bilingual.sh {modality} {language}', shell=True)
 	elif version == 'v2_robust' and modality == 'printed':
 		call(f'./infer_v2_robust.sh {modality} {language}', shell=True)
+	elif version == 'v2.1_robust' and modality == 'printed' and language == 'telugu':
+		call(f'./infer_v2.1_robust.sh {modality} {language}', shell=True)
 	elif version == 'v3_bilingual' and modality == 'printed' and language == 'telugu':
 		call(f'./infer_v3_bilingual.sh {modality} {language}', shell=True)
 	elif version == 'v3.1_bilingual' and modality == 'printed' and language == 'telugu':

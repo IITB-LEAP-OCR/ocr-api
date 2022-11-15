@@ -25,7 +25,6 @@ fi
 
 echo "Performing Inference for $LANGUAGE $MODALITY Task"
 
-# MODEL_DIR="/home/ajoy/0_ajoy_experiments/$MODALITY/3_trained_model/3_version_bilingual/$LANGUAGE"
 MODEL_DIR="/home/ocr/models/pretrained/3.1_version_bilingual/$MODALITY/$LANGUAGE"
 
 echo "Checking for model dir"
