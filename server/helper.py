@@ -63,34 +63,19 @@ def load_model(modality: str, language: str, modelid: str) -> None:
 
 
 
-def process_image_content(image_content: str, savepath: str) -> None:
-	"""
-	input the base64 encoded image and saves the image inside the folder.
-	savepath is the name of the image to be saved as
-	"""
-	assert isinstance(image_content, str)
-	with open(savepath, 'wb') as f:
-		f.write(base64.b64decode(image_content))
-
-
 def process_images(images: List[str], save_path) -> None:
 	"""
 	processes all the images in the given list.
 	it saves all the images in the save_path folder.
 	"""
 	for idx, image in enumerate(images):
-		if image is not None:
-			try:
-				process_image_content(image, join(save_path, f'{idx}.jpg'))
-			except:
-				raise HTTPException(
-					status_code=400,
-					detail=f'Error while decoding and saving the image #{idx}',
-				)
-		else:
+		try:
+			with open(join(save_path, f'{idx}.jpg'), 'wb') as f:
+				f.write(base64.b64decode(image))
+		except:
 			raise HTTPException(
 				status_code=400,
-				detail=f'image #{idx} doesnt contain either imageContent or imageUri',
+				detail=f'Error while decoding and saving the image #{idx}',
 			)
 
 

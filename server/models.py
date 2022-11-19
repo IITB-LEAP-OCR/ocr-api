@@ -63,7 +63,7 @@ class OCRRequest(BaseModel):
 	)
 	language: LanguageEnum
 	version: Optional[VersionEnum] = Field(
-		VersionEnum.v0,
+		VersionEnum.v2,
 		description='Describes the version no of the models to be called (IIITH)'
 	)
 	modelid: Optional[str] = Field(
@@ -72,9 +72,9 @@ class OCRRequest(BaseModel):
 	)
 	omit: Optional[bool] = Field(
 		True,
-		description='Sspecifies whether to omit the meta details from the OCRResponse'
+		description='Specifies whether to omit the meta details from the OCRResponse'
 	)
-	meta: Optional[Dict[str, Any]] = Field(
+	meta: Optional[Dict[Any, Any]] = Field(
 		{},
 		description='Extra meta details to give to the model'
 	)
@@ -85,7 +85,7 @@ class OCRImageResponse(BaseModel):
 	This is the model placeholder for the ocr output of a single image
 	"""
 	text: str
-	meta: Optional[Dict[str, Any]] = Field(
+	meta: Optional[Dict[Any, Any]] = Field(
 		{},
 		description='Meta information given by model for each image'
 	)
