@@ -46,31 +46,31 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 	response_model=List[OCRImageResponse],
 	response_model_exclude_none=True
 )
-def infer_ocr(
-	ocr_request: OCRRequest,
-) -> List[OCRImageResponse]:
+def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 	tmp = TemporaryDirectory(prefix='ocr_images')
 	process_images(ocr_request.imageContent, tmp.name)
 
 	_, language = process_language(ocr_request.language)
 	version = process_version(ocr_request.version)
 	modality = process_modality(ocr_request.modality)
+	if 'bilingual' in version:
+		language = f'english_{language}'
 	print(language, version, modality)
 	if version == 'v0':
 		load_model(modality, language, version)
 		call(f'./infer_v0.sh {modality} {language}', shell=True)
-	elif version == 'v2':
-		call(f'./infer_v2.sh {modality} {language} {tmp.name}', shell=True)
-	elif version == 'v2_robust' and modality == 'printed':
-		call(f'./infer_v2_robust.sh {modality} {language} {tmp.name}', shell=True)
-	elif version == 'v2_bilingual' and modality == 'printed':
-		call(f'./infer_v2_bilingual.sh {modality} english_{language} {tmp.name}', shell=True)
-	elif version == 'v2.1_robust' and modality == 'printed' and language == 'telugu':
-		call(f'./infer_v2.1_robust.sh {modality} {language} {tmp.name}', shell=True)
-	elif version == 'v3_bilingual' and modality == 'printed' and language == 'telugu':
-		call(f'./infer_v3_bilingual.sh {modality} english_{language} {tmp.name}', shell=True)
-	elif version == 'v3.1_bilingual' and modality == 'printed' and language == 'telugu':
-		call(f'./infer_v3.1_bilingual.sh {modality} english_{language} {tmp.name}', shell=True)
+	elif version in [
+		'v2',
+		'v2_robust',
+		'v2.1_robust',
+		'v2_bilingual',
+		'v3_bilingual',
+		'v3.1_bilingual',
+	]:
+		call(
+			f'./infer.sh {modality} {language} {tmp.name} {version}',
+			shell=True
+		)
 	elif version == 'v1_iitb' and modality == 'handwritten':
 		call(f'./infer_v1_iitb.sh {modality} {language} {tmp.name}', shell=True)
 	return process_ocr_output(tmp.name)

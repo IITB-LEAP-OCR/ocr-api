@@ -4,10 +4,11 @@
 # this script will start the docker container which in turn will run the flask
 # server and load the model specified by the params in the memory.
 
+
 MODALITY="$1"
 LANGUAGE="$2"
-VERSION="v2"
 DATA_DIR="$3"
+VERSION="$4"
 
 
 echo "Performing Inference for $VERSION $LANGUAGE $MODALITY Task"
