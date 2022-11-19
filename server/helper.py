@@ -1,6 +1,5 @@
 import base64
 import json
-import os
 from os.path import join
 from subprocess import call, check_output
 from typing import List, Tuple
@@ -69,8 +68,6 @@ def process_image_content(image_content: str, savepath: str) -> None:
 	input the base64 encoded image and saves the image inside the folder.
 	savepath is the name of the image to be saved as
 	"""
-	# savefolder = '/home/ocr/website/images'
-
 	assert isinstance(image_content, str)
 	with open(savepath, 'wb') as f:
 		f.write(base64.b64decode(image_content))
@@ -82,8 +79,6 @@ def process_images(images: List[str], save_path='/home/ocr/website/images') -> N
 	it saves all the images in the /home/ocr/website/images folder and
 	returns this absolute path.
 	"""
-	# print('deleting all the previous data from the images folder')
-	# os.system('rm -rf /home/ocr/website/images/*')
 	for idx, image in enumerate(images):
 		if image is not None:
 			try:
@@ -115,7 +110,7 @@ def process_language(lcode: LanguageEnum) -> Tuple[str, str]:
 	else:
 		raise HTTPException(
 			status_code=400,
-			detail='language code is  not present'
+			detail='language code is not present'
 		)
 	return (language_code.value, language)
 
@@ -127,13 +122,36 @@ def process_modality(modal_type: ModalityEnum) -> str:
 def process_version(ver_no: VersionEnum) -> str:
 	return ver_no.value
 
-
-def process_ocr_output(folder: str='/home/ocr/website/images') -> List[OCRImageResponse]:
+def verify_model(language, version, modality):
 	"""
-	process the ./images/out.json file and returns the ocr response.
+	function that raises httpexception if the model is not available.
 	"""
 	try:
-		a = open(join(folder, 'out.json'), 'r').read().strip()
+		if version == 'v2':
+			assert language != 'english'
+		elif version == 'v2_robust':
+			assert modality == 'printed'
+		elif version == 'v2.1_robust':
+			assert modality  == 'printed' and language == 'telugu'
+		elif version == 'v2_bilingual':
+			assert modality == 'printed' and language not in ['hindi', 'urdu']
+		elif version == 'v3_bilingual':
+			assert modality  == 'printed' and language == 'telugu'
+		elif version == 'v3.1_bilingual':
+			assert modality  == 'printed' and language == 'telugu'
+	except AssertionError:
+		raise HTTPException(
+			status_code=400,
+			detail=f'No model available for {language} {version} {modality}'
+		)
+
+
+def process_ocr_output(image_folder: str) -> List[OCRImageResponse]:
+	"""
+	process the <folder>/out.json file and returns the ocr response.
+	"""
+	try:
+		a = open(join(image_folder, 'out.json'), 'r').read().strip()
 		a = json.loads(a)
 		a = list(a.items())
 		a = sorted(a, key=lambda x:int(x[0].split('.')[0]))
