@@ -53,6 +53,7 @@ def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 	_, language = process_language(ocr_request.language)
 	version = process_version(ocr_request.version)
 	modality = process_modality(ocr_request.modality)
+	verify_model(language, version, modality)
 	if 'bilingual' in version:
 		language = f'english_{language}'
 	print(language, version, modality)
@@ -71,7 +72,7 @@ def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 			f'./infer.sh {modality} {language} {tmp.name} {version}',
 			shell=True
 		)
-	elif version == 'v1_iitb' and modality == 'handwritten':
+	elif version == 'v1_iitb':
 		call(f'./infer_v1_iitb.sh {modality} {language} {tmp.name}', shell=True)
 	return process_ocr_output(tmp.name)
 

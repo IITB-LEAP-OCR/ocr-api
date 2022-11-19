@@ -1,5 +1,6 @@
 from subprocess import call
 from typing import List
+from tempfile import TemporaryDirectory
 
 from fastapi import APIRouter
 from server.helper import process_images, process_ocr_output
@@ -18,6 +19,7 @@ router = APIRouter(
 	response_model_exclude_none=True
 )
 def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
-	path = process_images(ocr_request.images)
-	call(f'./cegis_infer.sh', shell=True)
-	return process_ocr_output()
+	tmp = TemporaryDirectory(prefix='ocr_cegis')
+	process_images(ocr_request.images, tmp.name)
+	call(f'./cegis_infer.sh {tmp.name}', shell=True)
+	return process_ocr_output(tmp.name)

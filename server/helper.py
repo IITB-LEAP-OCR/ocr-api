@@ -73,11 +73,10 @@ def process_image_content(image_content: str, savepath: str) -> None:
 		f.write(base64.b64decode(image_content))
 
 
-def process_images(images: List[str], save_path='/home/ocr/website/images') -> None:
+def process_images(images: List[str], save_path) -> None:
 	"""
 	processes all the images in the given list.
-	it saves all the images in the /home/ocr/website/images folder and
-	returns this absolute path.
+	it saves all the images in the save_path folder.
 	"""
 	for idx, image in enumerate(images):
 		if image is not None:
@@ -139,10 +138,23 @@ def verify_model(language, version, modality):
 			assert modality  == 'printed' and language == 'telugu'
 		elif version == 'v3.1_bilingual':
 			assert modality  == 'printed' and language == 'telugu'
+		elif version == 'v1_iitb':
+			assert modality == 'handwritten' and language not in [
+				'assamese',
+				'kannada',
+				'malayalam',
+				'manipuri',
+				'marathi'
+			]
 	except AssertionError:
 		raise HTTPException(
 			status_code=400,
 			detail=f'No model available for {language} {version} {modality}'
+		)
+	except Exception:
+		raise HTTPException(
+			status_code=500,
+			detail='Unknown exception while verifing the models'
 		)
 
 
