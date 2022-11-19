@@ -20,7 +20,7 @@ router = APIRouter(
 async def infer_ulca_v2_ocr(ocr_request: OCRRequest, request: Request) -> OCRResponse:
 	process_images(ocr_request.image)
 	lcode, language, modality, dlevel = process_config(ocr_request.config)
-	call(f'./infer_v2.sh {modality} {language}', shell=True)
+	call(f'./infer_ulca_v2.sh {modality} {language}', shell=True)
 	ret = process_ocr_output(lcode, modality, dlevel)
 	await save_logs(request, ret)
 	return ret
