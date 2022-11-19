@@ -8,22 +8,12 @@
 MODALITY="$1"
 LANGUAGE="$2"
 VERSION="v2.1_robust"
-DATA_DIR="/home/ocr/website/images"
-
-if [[ ! "$LANGUAGE" =~ ^(telugu)$ ]]; then
-	echo "Please enter a valid language (telugu)"
-	exit
-fi
-
-if [[ ! "$MODALITY" =~ ^(printed)$ ]]; then
-	echo "Please enter a valid modality (printed)"
-	exit
-fi
+DATA_DIR="$3"
 
 
-echo "Performing Inference for $LANGUAGE $MODALITY Task"
+echo "Performing Inference for $VERSION $LANGUAGE $MODALITY Task"
 
-MODEL_DIR="/home/ocr/models/pretrained/2.1_version_robust/$MODALITY/$LANGUAGE"
+MODEL_DIR="/home/ocr/models/pretrained/$VERSION/$MODALITY/$LANGUAGE"
 
 echo "Checking for model dir"
 if [ ! -d "$MODEL_DIR" ]; then
@@ -41,11 +31,8 @@ else
 	echo -e "DATA_DIR\t$DATA_DIR"
 fi
 
-CONTAINER_NAME="infer-$(echo $MODALITY)-$(echo $LANGUAGE)-$(echo $VERSION)"
-echo "Starting the inference in detached docker container: $CONTAINER_NAME"
-
-docker run --rm --name=$CONTAINER_NAME --gpus all --net host \
+docker run --rm --gpus all --net host \
 	-v $MODEL_DIR:/model:ro \
 	-v $DATA_DIR:/data \
-	ocr:v2.1_robust \
+	ocr:$VERSION \
 	python infer.py $LANGUAGE

@@ -3,6 +3,7 @@ from subprocess import call
 from typing import List
 
 from fastapi import Depends, FastAPI, Form, Request, UploadFile, status
+from tempfile import TemporaryDirectory
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -48,7 +49,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 def infer_ocr(
 	ocr_request: OCRRequest,
 ) -> List[OCRImageResponse]:
-	process_images(ocr_request.imageContent)
+	tmp = TemporaryDirectory(prefix='ocr_images')
+	process_images(ocr_request.imageContent, tmp.name)
 
 	_, language = process_language(ocr_request.language)
 	version = process_version(ocr_request.version)
@@ -58,20 +60,20 @@ def infer_ocr(
 		load_model(modality, language, version)
 		call(f'./infer_v0.sh {modality} {language}', shell=True)
 	elif version == 'v2':
-		call(f'./infer_v2.sh {modality} {language}', shell=True)
-	elif version == 'v2_bilingual' and modality == 'printed':
-		call(f'./infer_v2_bilingual.sh {modality} {language}', shell=True)
+		call(f'./infer_v2.sh {modality} {language} {tmp.name}', shell=True)
 	elif version == 'v2_robust' and modality == 'printed':
-		call(f'./infer_v2_robust.sh {modality} {language}', shell=True)
+		call(f'./infer_v2_robust.sh {modality} {language} {tmp.name}', shell=True)
+	elif version == 'v2_bilingual' and modality == 'printed':
+		call(f'./infer_v2_bilingual.sh {modality} english_{language} {tmp.name}', shell=True)
 	elif version == 'v2.1_robust' and modality == 'printed' and language == 'telugu':
-		call(f'./infer_v2.1_robust.sh {modality} {language}', shell=True)
+		call(f'./infer_v2.1_robust.sh {modality} {language} {tmp.name}', shell=True)
 	elif version == 'v3_bilingual' and modality == 'printed' and language == 'telugu':
-		call(f'./infer_v3_bilingual.sh {modality} {language}', shell=True)
+		call(f'./infer_v3_bilingual.sh {modality} english_{language} {tmp.name}', shell=True)
 	elif version == 'v3.1_bilingual' and modality == 'printed' and language == 'telugu':
-		call(f'./infer_v3.1_bilingual.sh {modality} {language}', shell=True)
+		call(f'./infer_v3.1_bilingual.sh {modality} english_{language} {tmp.name}', shell=True)
 	elif version == 'v1_iitb' and modality == 'handwritten':
-		call(f'./infer_v1_iitb.sh {modality} {language}', shell=True)
-	return process_ocr_output()
+		call(f'./infer_v1_iitb.sh {modality} {language} {tmp.name}', shell=True)
+	return process_ocr_output(tmp.name)
 
 
 @app.post(

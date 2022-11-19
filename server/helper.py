@@ -64,34 +64,34 @@ def load_model(modality: str, language: str, modelid: str) -> None:
 
 
 
-def process_image_content(image_content: str, savename: str) -> None:
+def process_image_content(image_content: str, savepath: str) -> None:
 	"""
 	input the base64 encoded image and saves the image inside the folder.
-	savename is the name of the image to be saved as
+	savepath is the name of the image to be saved as
 	"""
-	savefolder = '/home/ocr/website/images'
+	# savefolder = '/home/ocr/website/images'
 
 	assert isinstance(image_content, str)
-	with open(join(savefolder, savename), 'wb') as f:
+	with open(savepath, 'wb') as f:
 		f.write(base64.b64decode(image_content))
 
 
-def process_images(images: List[str]) -> None:
+def process_images(images: List[str], save_path='/home/ocr/website/images') -> None:
 	"""
 	processes all the images in the given list.
 	it saves all the images in the /home/ocr/website/images folder and
 	returns this absolute path.
 	"""
-	print('deleting all the previous data from the images folder')
-	os.system('rm -rf /home/ocr/website/images/*')
+	# print('deleting all the previous data from the images folder')
+	# os.system('rm -rf /home/ocr/website/images/*')
 	for idx, image in enumerate(images):
 		if image is not None:
 			try:
-				process_image_content(image, '{}.jpg'.format(idx))
+				process_image_content(image, join(save_path, f'{idx}.jpg'))
 			except:
 				raise HTTPException(
 					status_code=400,
-					detail=f'Error while decodeing and saving the image #{idx}',
+					detail=f'Error while decoding and saving the image #{idx}',
 				)
 		else:
 			raise HTTPException(
@@ -128,13 +128,12 @@ def process_version(ver_no: VersionEnum) -> str:
 	return ver_no.value
 
 
-def process_ocr_output() -> List[OCRImageResponse]:
+def process_ocr_output(folder: str='/home/ocr/website/images') -> List[OCRImageResponse]:
 	"""
 	process the ./images/out.json file and returns the ocr response.
 	"""
 	try:
-		ret = []
-		a = open('/home/ocr/website/images/out.json', 'r').read().strip()
+		a = open(join(folder, 'out.json'), 'r').read().strip()
 		a = json.loads(a)
 		a = list(a.items())
 		a = sorted(a, key=lambda x:int(x[0].split('.')[0]))
