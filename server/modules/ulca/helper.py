@@ -125,7 +125,6 @@ def process_config(config: OCRConfig):
 		language = LANGUAGES[language_code]
 		modality = config.modality.value
 		if modality == 'print': modality = 'printed'
-		if modality == 'scenetext': modality = 'scene_text'
 		dlevel = config.detectionLevel.value
 	except Exception as e:
 		print(e)
@@ -157,7 +156,7 @@ def process_ocr_output(language_code: str, modality: str, dlevel: str) -> OCRRes
 		config=OCRConfig(
 			language=LanguagePair(
 				sourceLanguage=language_code,
-			)
+			),
 		),
 		output=a.copy(),
 	)

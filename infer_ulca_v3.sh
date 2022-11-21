@@ -7,7 +7,7 @@
 
 MODALITY="$1"
 LANGUAGE="$2"
-VERSION="v2"
+VERSION="v2_robust"
 DATA_DIR="/home/ocr/website/images"
 
 echo "Performing Inference for $LANGUAGE $MODALITY Task"
@@ -33,5 +33,5 @@ fi
 docker run --rm --gpus all --net host \
 	-v $MODEL_DIR:/model:ro \
 	-v $DATA_DIR:/data \
-	ocr:v2 \
+	ocr:v2_robust \
 	python infer.py $LANGUAGE
