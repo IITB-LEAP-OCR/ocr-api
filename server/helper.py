@@ -6,27 +6,9 @@ from typing import List, Tuple
 
 from fastapi import HTTPException
 
-from server.config import NUMBER_LOADED_MODEL_THRESHOLD
+from server.config import NUMBER_LOADED_MODEL_THRESHOLD, LANGUAGES
 
 from .models import *
-
-# This is the reference to convert language codes to language name
-LANGUAGES = {
-	'en': 'english',
-	'hi': 'hindi',
-	'mr': 'marathi',
-	'ta': 'tamil',
-	'te': 'telugu',
-	'kn': 'kannada',
-	'gu': 'gujarati',
-	'pa': 'punjabi',
-	'bn': 'bengali',
-	'ml': 'malayalam',
-	'asa': 'assamese',
-	'mni': 'manipuri',
-	'ori': 'oriya',
-	'ur': 'urdu',
-}
 
 
 def check_loaded_model() -> List[Tuple[str, str, str]]:
@@ -80,31 +62,14 @@ def process_images(images: List[str], save_path) -> None:
 
 
 def process_language(lcode: LanguageEnum) -> Tuple[str, str]:
-	global LANGUAGES
-	if (lcode != None):
-		try:
-			language_code = lcode
-			language = LANGUAGES[language_code]
-		except Exception as e:
-			print(e)
-			raise HTTPException(
-				status_code=400,
-				detail='language code is invalid'
-			)
-	else:
-		raise HTTPException(
-			status_code=400,
-			detail='language code is not present'
-		)
-	return (language_code.value, language)
-
+	return (lcode.value, LANGUAGES[lcode.value])
 
 def process_modality(modal_type: ModalityEnum) -> str:
 	return modal_type.value
 
-
 def process_version(ver_no: VersionEnum) -> str:
 	return ver_no.value
+
 
 def verify_model(language, version, modality):
 	"""
