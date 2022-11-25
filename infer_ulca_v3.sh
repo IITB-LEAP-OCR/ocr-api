@@ -12,7 +12,7 @@ DATA_DIR="/home/ocr/website/images"
 
 echo "Performing Inference for $LANGUAGE $MODALITY Task"
 
-MODEL_DIR="/home/ocr/models/pretrained/v2/$MODALITY/$LANGUAGE"
+MODEL_DIR="/home/ocr/models/pretrained/v2_robust/$MODALITY/$LANGUAGE"
 
 echo "Checking for model dir"
 if [ ! -d "$MODEL_DIR" ]; then
