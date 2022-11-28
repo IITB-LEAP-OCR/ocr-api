@@ -34,4 +34,4 @@ docker run --rm --gpus all --net host \
 	-v $MODEL_DIR:/model:ro \
 	-v $DATA_DIR:/data \
 	ocr:v2 \
-	python infer.py $LANGUAGE
+	python infer.py $MODALITY $LANGUAGE

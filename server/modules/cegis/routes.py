@@ -23,3 +23,15 @@ def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 	process_images(ocr_request.images, tmp.name)
 	call(f'./cegis_infer.sh {tmp.name}', shell=True)
 	return process_ocr_output(tmp.name)
+
+
+@router.post(
+	'/v2',
+	response_model=List[OCRImageResponse],
+	response_model_exclude_none=True
+)
+def shaon_infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
+	tmp = TemporaryDirectory(prefix='ocr_cegis')
+	process_images(ocr_request.images, tmp.name)
+	call(f'./cegis_infer.sh {tmp.name}', shell=True)
+	return process_ocr_output(tmp.name)

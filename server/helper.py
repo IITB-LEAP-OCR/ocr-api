@@ -81,7 +81,10 @@ def verify_model(language, version, modality):
 		elif version == 'v2_robust':
 			assert modality == 'printed'
 		elif version == 'v2.1_robust':
+			# upnishad fine-tuned robust model
 			assert modality  == 'printed' and language == 'telugu'
+		elif version == 'v3.1_robust':
+			assert modality == 'printed' and language == 'telugu'
 		elif version == 'v2_bilingual':
 			assert modality == 'printed' and language not in ['hindi', 'urdu']
 		elif version == 'v3_bilingual':
