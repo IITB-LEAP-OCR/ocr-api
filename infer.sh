@@ -35,4 +35,4 @@ docker run --rm --gpus all --net host \
 	-v $MODEL_DIR:/model:ro \
 	-v $DATA_DIR:/data \
 	ocr:$VERSION \
-	python infer.py $LANGUAGE
+	python infer.py $MODALITY $LANGUAGE
