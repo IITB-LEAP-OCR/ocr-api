@@ -95,16 +95,28 @@ def infer_ocr(
 	_, language = process_language(language)
 	version = process_version(version)
 	modality = process_modality(modality)
+
+	verify_model(language, version, modality)
+	if 'bilingual' in version:
+		language = f'english_{language}'
 	print(language, version, modality)
 	if version == 'v0':
 		load_model(modality, language, version)
 		call(f'./infer_v0.sh {modality} {language}', shell=True)
-	elif version == 'v2':
-		call(f'./infer_v2.sh {modality} {language}', shell=True)
-	elif version == 'v2_bilingual' and modality == 'printed':
-		call(f'./infer_v2_bilingual.sh {modality} {language}', shell=True)
-	elif version == 'v2_robust' and modality == 'printed':
-		call(f'./infer_v2_robust.sh {modality} {language}', shell=True)
-	elif version == 'v3_bilingual' and modality == 'printed' and language == 'telugu':
-		call(f'./infer_v3_bilingual.sh {modality} {language}', shell=True)
-	return process_ocr_output()
+	elif version in [
+		'v2',
+		'v2_robust',
+		'v2.1_robust',
+		'v3_robust',
+		'v3.1_robust',
+		'v2_bilingual',
+		'v3_bilingual',
+		'v3.1_bilingual',
+	]:
+		call(
+			f'./infer.sh {modality} {language} /home/ocr/website/images {version}',
+			shell=True
+		)
+	elif version == 'v1_iitb':
+		call(f'./infer_v1_iitb.sh {modality} {language} /home/ocr/website/images', shell=True)
+	return process_ocr_output('/home/ocr/website/images')
