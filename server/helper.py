@@ -104,6 +104,12 @@ def verify_model(language, version, modality):
 				'malayalam',
 				'manipuri',
 				'marathi'
+			] or modality == 'printed' and language in [
+				'hindi',
+				'kannada',
+				'marathi',
+				'tamil',
+				'telugu',
 			]
 	except AssertionError:
 		raise HTTPException(
