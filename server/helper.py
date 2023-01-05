@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 from fastapi import HTTPException
 
-from server.config import NUMBER_LOADED_MODEL_THRESHOLD, LANGUAGES
+from server.config import LANGUAGES, NUMBER_LOADED_MODEL_THRESHOLD
 
 from .models import *
 
