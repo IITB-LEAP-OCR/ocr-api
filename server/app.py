@@ -64,6 +64,7 @@ def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 		'v2',
 		'v2_robust',
 		'v2.1_robust',
+		'v3',
 		'v3_robust',
 		'v3.1_robust',
 		'v2_bilingual',
