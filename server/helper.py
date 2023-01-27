@@ -85,6 +85,8 @@ def verify_model(language, version, modality):
 			assert modality  == 'printed' and language == 'telugu'
 		elif version == 'v3':
 			assert modality == 'handwritten'
+		elif version == 'v3_post':
+			assert modality == 'handwritten'
 		elif version == 'v3_robust':
 			assert modality == 'printed' and language not in [
 				'assamese',
@@ -99,6 +101,10 @@ def verify_model(language, version, modality):
 			assert modality  == 'printed' and language == 'telugu'
 		elif version == 'v3.1_bilingual':
 			assert modality  == 'printed' and language == 'telugu'
+		elif version in ['v4', 'v4_robust', 'v4_bilingual', 'v4_robustbilingual']:
+			assert modality == 'printed' and language != 'urdu'
+		elif version in ['v4.1', 'v4.1_robust', 'v4.1_bilingual', 'v4.1_robustbilingual']:
+			assert modality == 'printed' and language == 'telugu'
 		elif version == 'v1_iitb':
 			assert modality == 'handwritten' and language not in [
 				'assamese',
