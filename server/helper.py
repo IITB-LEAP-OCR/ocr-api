@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 from os.path import join
 from subprocess import call, check_output
 from typing import List, Tuple
@@ -83,6 +84,12 @@ def verify_model(language, version, modality):
 		elif version == 'v2.1_robust':
 			# upnishad fine-tuned robust model
 			assert modality  == 'printed' and language == 'telugu'
+		elif version == 'v2_bilingual':
+			assert modality == 'printed' and language not in [
+				'english',
+				'hindi',
+				'urdu'
+			]
 		elif version == 'v3':
 			assert modality == 'handwritten'
 		elif version == 'v3_post':
@@ -95,15 +102,17 @@ def verify_model(language, version, modality):
 			]
 		elif version == 'v3.1_robust':
 			assert modality == 'printed' and language == 'telugu'
-		elif version == 'v2_bilingual':
-			assert modality == 'printed' and language not in ['hindi', 'urdu']
 		elif version == 'v3_bilingual':
 			assert modality  == 'printed' and language == 'telugu'
 		elif version == 'v3.1_bilingual':
 			assert modality  == 'printed' and language == 'telugu'
-		elif version in ['v4', 'v4_robust', 'v4_bilingual', 'v4_robustbilingual']:
+		elif version in ['v4', 'v4_robust']:
 			assert modality == 'printed' and language != 'urdu'
-		elif version in ['v4.1', 'v4.1_robust', 'v4.1_bilingual', 'v4.1_robustbilingual']:
+		elif version in ['v4_bilingual', 'v4_robustbilingual']:
+			assert modality == 'printed' and language not in ['english', 'urdu']
+		elif version in ['v4.1', 'v4.1_robust']:
+			assert modality == 'printed' and language == 'telugu'
+		elif version in ['v4.1_bilingual', 'v4.1_robustbilingual']:
 			assert modality == 'printed' and language == 'telugu'
 		elif version == 'v1_iitb':
 			assert modality == 'handwritten' and language not in [
@@ -135,11 +144,19 @@ def process_ocr_output(image_folder: str) -> List[OCRImageResponse]:
 	"""
 	process the <folder>/out.json file and returns the ocr response.
 	"""
+	sorting_func = lambda x:int(x[0].split('.')[0])
 	try:
-		a = open(join(image_folder, 'out.json'), 'r').read().strip()
+		with open(join(image_folder, 'out.json'), 'r', encoding='utf-8') as f:
+			a = f.read().strip()
 		a = json.loads(a)
 		a = list(a.items())
-		a = sorted(a, key=lambda x:int(x[0].split('.')[0]))
+		a = sorted(a, key=sorting_func)
+		prob_path = join(image_folder, 'prob.json')
+		if os.path.exists(prob_path):
+			with open(prob_path, 'r', encoding='utf-8') as f:
+				probs = f.read().strip()
+			probs = json.loads(probs)
+			return [OCRImageResponse(text=i[1], meta=probs[i[0]]) for i in a]
 		return [OCRImageResponse(text=i[1]) for i in a]
 	except Exception as e:
 		print(e)

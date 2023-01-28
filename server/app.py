@@ -40,6 +40,11 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 	return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
+@app.get('/ocr/ping', tags=['Testing'])
+def test_server_online():
+	return 'pong'
+
+
 @app.post(
 	'/ocr/infer',
 	tags=['OCR'],
@@ -62,24 +67,17 @@ def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 		call(f'./infer_v0.sh {modality} {language}', shell=True)
 	elif version == 'v1_iitb':
 		call(f'./infer_v1_iitb.sh {modality} {language} {tmp.name}', shell=True)
-	# elif version in [
-	# 	'v2',
-	# 	'v2_robust',
-	# 	'v2.1_robust',
-	# 	'v3',
-	# 	'v3_post',
-	# 	'v3_robust',
-	# 	'v3.1_robust',
-	# 	'v2_bilingual',
-	# 	'v3_bilingual',
-	# 	'v3.1_bilingual',
-	# 	'v4',
-	# ]:
 	else:
-		call(
-			f'./infer.sh {modality} {language} {tmp.name} {version}',
-			shell=True
-		)
+		if ocr_request.meta.get('include_probability', False):
+			call(
+				f'./infer_prob.sh {modality} {language} {tmp.name} {version}',
+				shell=True
+			)
+		else:
+			call(
+				f'./infer.sh {modality} {language} {tmp.name} {version}',
+				shell=True
+			)
 	return process_ocr_output(tmp.name)
 
 
