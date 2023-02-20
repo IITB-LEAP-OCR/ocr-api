@@ -1,13 +1,14 @@
 import base64
 import json
 import os
-from os.path import join
+from os.path import basename, join
 from subprocess import call, check_output
 from typing import List, Tuple
 
+import pytesseract
 from fastapi import HTTPException
 
-from server.config import LANGUAGES, NUMBER_LOADED_MODEL_THRESHOLD
+from server.config import LANGUAGES, NUMBER_LOADED_MODEL_THRESHOLD, TESS_LANG
 
 from .models import *
 
@@ -110,9 +111,11 @@ def verify_model(language, version, modality):
 			assert modality == 'printed' and language != 'urdu'
 		elif version in ['v4_bilingual', 'v4_robustbilingual']:
 			assert modality == 'printed' and language not in ['english', 'urdu']
-		elif version in ['v4.1', 'v4.1_robust']:
-			assert modality == 'printed' and language == 'telugu'
-		elif version in ['v4.1_bilingual', 'v4.1_robustbilingual']:
+		elif any((
+			version.startswith('v4.1'),
+			version.startswith('v4.2'),
+			version.startswith('v4.3')
+		)):
 			assert modality == 'printed' and language == 'telugu'
 		elif version == 'v1_iitb':
 			assert modality == 'handwritten' and language not in [
@@ -128,12 +131,15 @@ def verify_model(language, version, modality):
 				'tamil',
 				'telugu',
 			]
+		elif version == 'tesseract':
+			assert modality == 'printed' and language != 'manipuri'
 	except AssertionError:
 		raise HTTPException(
 			status_code=400,
 			detail=f'No model available for {language} {version} {modality}'
 		)
-	except Exception:
+	except Exception as e:
+		print(e)
 		raise HTTPException(
 			status_code=500,
 			detail='Unknown exception while verifing the models'
@@ -164,3 +170,13 @@ def process_ocr_output(image_folder: str) -> List[OCRImageResponse]:
 			status_code=500,
 			detail='Error while parsing the ocr output'
 		)
+
+
+def call_tesseract(language, folder):
+	a = os.listdir(folder)
+	a = [join(folder, i) for i in a]
+	ret = {}
+	for i in a:
+		ret[basename(i)] = pytesseract.image_to_string(i, lang=TESS_LANG[language]).strip()
+	with open(join(folder, 'out.json'), 'w', encoding='utf-8') as f:
+		f.write(json.dumps(ret, indent=4))

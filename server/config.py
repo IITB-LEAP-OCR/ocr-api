@@ -20,3 +20,20 @@ LANGUAGES = {
 	'ori': 'oriya',
 	'ur': 'urdu',
 }
+
+TESS_LANG = {
+	'english': 'eng',
+	'hindi': 'hin',
+	'marathi': 'mar',
+	'tamil': 'tam',
+	'telugu': 'tel',
+	'kannada': 'kan',
+	'gujarati': 'guj',
+	'punjabi': 'pan',
+	'bengali': 'ben',
+	'malayalam': 'mal',
+	'assamese': 'asm',
+	'manipuri': 'mni',
+	'oriya': 'ori',
+	'urdu': 'urd',
+}

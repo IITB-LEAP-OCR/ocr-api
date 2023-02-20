@@ -29,11 +29,6 @@ class LanguageEnum(str, Enum):
 	mni = 'mni'  # manipuri
 	ur = 'ur'  # urdu
 
-class ModalityEnum(str, Enum):
-	printed = 'printed'
-	handwritten = 'handwritten'
-	scene_text = 'scene_text'
-
 class LevelEnum(str, Enum):
 	word = 'word'
 	line = 'line'
@@ -60,7 +55,17 @@ class VersionEnum(str, Enum):
 	v4_1_robust = 'v4.1_robust'
 	v4_1_bilingual = 'v4.1_bilingual'
 	v4_1_robustbilingual = 'v4.1_robustbilingual'
+	v4_2 = 'v4.2'
+	v4_2_robust = 'v4.2_robust'
+	v4_2_bilingual = 'v4.2_bilingual'
+	v4_2_robustbilingual = 'v4.2_robustbilingual'
+	v4_3u = 'v4.3u'
+	v4_3u_robust = 'v4.3u_robust'
+	v4_3u_bilingual = 'v4.3u_bilingual'
+	v4_3u_robustbilingual = 'v4.3u_robustbilingual'
 	v1_iitb = 'v1_iitb'
+
+	tesseract = 'tesseract'
 
 
 class OCRRequest(BaseModel):
@@ -102,3 +107,16 @@ class OCRImageResponse(BaseModel):
 		description='Meta information given by model for each image'
 	)
 
+
+class PostprocessRequest(BaseModel):
+	language: LanguageEnum
+	vocabulary: List[str]
+	words: List[OCRImageResponse]
+
+
+class PostprocessImageResponse(BaseModel):
+	text: List[str]
+	meta: Optional[Dict[Any, Any]] = Field(
+		{},
+		description='Meta information given by model for each image'
+	)
