@@ -77,8 +77,24 @@ def verify_model(language, version, modality):
 	"""
 	function that raises httpexception if the model is not available.
 	"""
+	minor_languages = [
+		'bodo',
+		'dogri',
+		'kashmiri',
+		'konkani',
+		'maithili',
+		'nepali',
+		'sanskrit',
+		'santali',
+		'sindhi',
+	]
 	try:
-		if version == 'v2':
+		# support for minor languages
+		if language in minor_languages:
+			assert version == 'v4_robust' and language not in [
+				'bodo',
+			]
+		elif version == 'v2':
 			assert language != 'english'
 		elif version == 'v2_robust':
 			assert modality == 'printed'
@@ -115,6 +131,7 @@ def verify_model(language, version, modality):
 			version.startswith('v4.1'),
 			version.startswith('v4.2'),
 			version.startswith('v4.3'),
+			version.startswith('v4.5'),
 		)):
 			assert modality == 'printed' and language == 'telugu'
 		elif any((

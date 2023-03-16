@@ -19,6 +19,17 @@ LANGUAGES = {
 	'mni': 'manipuri',
 	'ori': 'oriya',
 	'ur': 'urdu',
+
+	# Extra languages
+	'brx': 'bodo',
+	'doi': 'dogri',
+	'ks': 'kashmiri',
+	'kok': 'konkani',
+	'mai': 'maithili',
+	'ne': 'nepali',
+	'sa': 'sanskrit',
+	'sat': 'santali',
+	'sd': 'sindhi',
 }
 
 TESS_LANG = {

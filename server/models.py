@@ -29,6 +29,18 @@ class LanguageEnum(str, Enum):
 	mni = 'mni'  # manipuri
 	ur = 'ur'  # urdu
 
+	# extra languages
+	brx = 'brx' # Bodo
+	doi = 'doi' # Dogri
+	ks = 'ks' # Kashmiri
+	kok = 'kok' # Konkani
+	mai = 'mai' # Maithili
+	ne = 'ne' # Nepali
+	sa = 'sa' # Sanskrit
+	sat = 'sat' # Santali
+	sd = 'sd' # Sindhi
+
+
 class LevelEnum(str, Enum):
 	word = 'word'
 	line = 'line'
@@ -67,6 +79,10 @@ class VersionEnum(str, Enum):
 	v4_4l_robust = 'v4.4l_robust'
 	v4_4l_bilingual = 'v4.4l_bilingual'
 	v4_4l_robustbilingual = 'v4.4l_robustbilingual'
+	v4_5u = 'v4.5u'
+	v4_5u_robust = 'v4.5u_robust'
+	v4_5u_bilingual = 'v4.5u_bilingual'
+	v4_5u_robustbilingual = 'v4.5u_robustbilingual'
 	v1_iitb = 'v1_iitb'
 
 	tesseract = 'tesseract'
