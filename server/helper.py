@@ -114,9 +114,13 @@ def verify_model(language, version, modality):
 		elif any((
 			version.startswith('v4.1'),
 			version.startswith('v4.2'),
-			version.startswith('v4.3')
+			version.startswith('v4.3'),
 		)):
 			assert modality == 'printed' and language == 'telugu'
+		elif any((
+			version.startswith('v4.4'),
+		)):
+			assert modality == 'printed' and language == 'hindi'
 		elif version == 'v1_iitb':
 			assert modality == 'handwritten' and language not in [
 				'assamese',

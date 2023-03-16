@@ -1,5 +1,6 @@
 import logging
 import os
+from dataclasses import dataclass
 from os.path import join
 from subprocess import call
 from tempfile import TemporaryDirectory
@@ -47,6 +48,11 @@ def test_server_online():
 	return 'pong'
 
 
+@dataclass
+class CustomDir:
+	name: str
+
+
 @app.post(
 	'/ocr/infer',
 	tags=['OCR'],
@@ -55,6 +61,7 @@ def test_server_online():
 )
 def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 	tmp = TemporaryDirectory(prefix='ocr_images')
+	# tmp = CustomDir(name='/home/ocr/test')
 	process_images(ocr_request.imageContent, tmp.name)
 
 	_, language = process_language(ocr_request.language)
@@ -100,6 +107,7 @@ def OCR_postprocess(request: PostprocessRequest) -> List[PostprocessImageRespons
 	tmp = TemporaryDirectory(prefix='postprocess')
 	# main_folder = tmp.name
 	main_folder = '/home/ocr/temp'
+	os.system(f'rm -rf {main_folder}/*')
 	data_prob_folder = join(main_folder, 'data_prob')
 	max_prob_folder = join(main_folder, 'max_prob')
 	os.system(f'mkdir {data_prob_folder}')
@@ -111,7 +119,7 @@ def OCR_postprocess(request: PostprocessRequest) -> List[PostprocessImageRespons
 	ocr_output = []
 	for i,v in enumerate(request.words):
 		print(f'processing for -> {i+1}')
-		ocr_output.append(f'{v.text}\t{v.text}')
+		ocr_output.append(f'{i+1}.jpg\t{v.text}')
 		with open(join(data_prob_folder, f'{i+1}.pts'), 'wb') as f:
 			f.write(base64.b64decode(v.meta['data_prob']))
 		with open(join(max_prob_folder, f'{i+1}.pts'), 'wb') as f:
@@ -126,7 +134,7 @@ def OCR_postprocess(request: PostprocessRequest) -> List[PostprocessImageRespons
 	for i in a:
 		x = i.strip().split(' ')
 		x = [j.strip() for j in x]
-		x = list(set(x))
+		x = list(set(x[1:]))
 		ret.append(
 			PostprocessImageResponse(text=x)
 		)
