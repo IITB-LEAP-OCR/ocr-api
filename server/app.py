@@ -166,20 +166,11 @@ def infer_ocr(
 	if version == 'v0':
 		load_model(modality, language, version)
 		call(f'./infer_v0.sh {modality} {language}', shell=True)
-	elif version in [
-		'v2',
-		'v2_robust',
-		'v2.1_robust',
-		'v3_robust',
-		'v3.1_robust',
-		'v2_bilingual',
-		'v3_bilingual',
-		'v3.1_bilingual',
-	]:
+	elif version == 'v1_iitb':
+		call(f'./infer_v1_iitb.sh {modality} {language} /home/ocr/website/images', shell=True)
+	else:
 		call(
 			f'./infer.sh {modality} {language} /home/ocr/website/images {version}',
 			shell=True
 		)
-	elif version == 'v1_iitb':
-		call(f'./infer_v1_iitb.sh {modality} {language} /home/ocr/website/images', shell=True)
 	return process_ocr_output('/home/ocr/website/images')
