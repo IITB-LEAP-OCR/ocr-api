@@ -132,6 +132,8 @@ def verify_model(language, version, modality):
 			version.startswith('v4.2'),
 			version.startswith('v4.3'),
 			version.startswith('v4.5'),
+			version.startswith('v4.7'),
+			version.startswith('v4.8'),
 		)):
 			assert modality == 'printed' and language == 'telugu'
 		elif any((
@@ -158,6 +160,8 @@ def verify_model(language, version, modality):
 			]
 		elif version == 'tesseract':
 			assert modality == 'printed' and language != 'manipuri'
+		elif version == 'v3_st':
+			assert modality == 'scenetext' and language == 'telugu'
 	except AssertionError:
 		raise HTTPException(
 			status_code=400,
