@@ -121,7 +121,7 @@ def process_config(config: OCRConfig):
 	global LANGUAGES
 	print(config)
 	try:
-		language_code = config.language.sourceLanguage.value
+		language_code = config.languages[0].sourceLanguage.value
 		language = LANGUAGES[language_code]
 		modality = config.modality.value
 		if modality == 'print': modality = 'printed'

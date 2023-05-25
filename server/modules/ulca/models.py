@@ -70,7 +70,7 @@ class OCRConfig(BaseModel):
 		ModalityEnum.print,
 		description=''
 	)
-	language: LanguagePair
+	languages: List[LanguagePair]
 
 class ImageFile(BaseModel):
 	imageContent: Optional[str] = Field(
