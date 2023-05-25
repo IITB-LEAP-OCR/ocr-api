@@ -64,3 +64,17 @@ def cegis_v4_english_char_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]
 	process_images(ocr_request.images, tmp.name)
 	call(f'./cegis_infer_v4.sh {tmp.name}', shell=True)
 	return process_ocr_output(tmp.name)
+
+@router.post(
+	'/v5',
+	response_model=List[OCRImageResponse],
+	response_model_exclude_none=True
+)
+def cegis_v5_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
+	"""
+	**??** model trained by Jasjeeet and deployedd on April 24, 2023
+	"""
+	tmp = TemporaryDirectory(prefix='ocr_cegis')
+	process_images(ocr_request.images, tmp.name)
+	call(f'./cegis_infer_v4.sh {tmp.name}', shell=True)
+	return process_ocr_output(tmp.name)
