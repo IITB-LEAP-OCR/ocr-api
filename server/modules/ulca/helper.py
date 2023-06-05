@@ -154,9 +154,9 @@ def process_ocr_output(language_code: str, modality: str, dlevel: str) -> OCRRes
 		)
 	return OCRResponse(
 		config=OCRConfig(
-			language=LanguagePair(
+			languages=[LanguagePair(
 				sourceLanguage=language_code,
-			),
+			)],
 		),
 		output=a.copy(),
 	)
