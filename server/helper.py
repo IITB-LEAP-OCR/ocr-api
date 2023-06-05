@@ -134,10 +134,13 @@ def verify_model(language, version, modality):
 			version.startswith('v4.5'),
 			version.startswith('v4.7'),
 			version.startswith('v4.8'),
+			version.startswith('v4.9'),
+			version.startswith('v4.10'),
 		)):
 			assert modality == 'printed' and language == 'telugu'
 		elif any((
 			version.startswith('v4.4'),
+			version.startswith('v4.11'),
 		)):
 			assert modality == 'printed' and language == 'hindi'
 		elif any((
