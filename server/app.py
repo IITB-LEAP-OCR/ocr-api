@@ -1,15 +1,14 @@
-import logging
 import os
 from dataclasses import dataclass
+from datetime import datetime
 from os.path import join
 from subprocess import call
 from tempfile import TemporaryDirectory
 from typing import List
 
-from fastapi import Depends, FastAPI, Form, Request, UploadFile, status
-from fastapi.exceptions import RequestValidationError
+from dateutil.tz import gettz
+from fastapi import Depends, FastAPI, Form, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
 from .dependencies import save_uploaded_images
 from .helper import *
@@ -35,12 +34,12 @@ app.include_router(cegis_router)
 app.include_router(ulca_router)
 
 
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-	exc_str = f'{exc}'.replace('\n', ' ').replace('   ', ' ')
-	logging.error(f"{request}: {exc_str}")
-	content = {'status_code': 10422, 'message': exc_str, 'data': None}
-	return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+@app.middleware('http')
+async def log_request_timestamp(request: Request, call_next):
+	local_tz = gettz('Asia/Kolkata')
+	print(f'Received request at: {datetime.now(tz=local_tz).isoformat()}')
+	return await call_next(request)
 
 
 @app.get('/ocr/ping', tags=['Testing'])
@@ -67,6 +66,7 @@ def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 	_, language = process_language(ocr_request.language)
 	version = process_version(ocr_request.version)
 	modality = process_modality(ocr_request.modality)
+	print('before verification', language, version, modality)
 	verify_model(language, version, modality)
 	if 'bilingual' in version:
 		language = f'english_{language}'
