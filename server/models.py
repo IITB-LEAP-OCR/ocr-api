@@ -97,6 +97,8 @@ class VersionEnum(str, Enum):
 	v4_11l_robust = 'v4.11l_robust'
 	v4_11l_bilingual = 'v4.11l_bilingual'
 	v4_11l_robustbilingual = 'v4.11l_robustbilingual'
+	v4_12u = 'v4.12u'
+	v4_13 = 'v4.13'
 	v3_st = 'v3_st'
 
 	tesseract = 'tesseract'
@@ -145,6 +147,7 @@ class OCRImageResponse(BaseModel):
 class PostprocessRequest(BaseModel):
 	language: LanguageEnum
 	vocabulary: List[str]
+	lexicon: Optional[List[str]] = []
 	words: List[OCRImageResponse]
 
 
