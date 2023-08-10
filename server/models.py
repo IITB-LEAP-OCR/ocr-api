@@ -100,6 +100,9 @@ class VersionEnum(str, Enum):
 	v4_12u = 'v4.12u'
 	v4_13 = 'v4.13'
 	v3_st = 'v3_st'
+	v4_hw = 'v4_hw'
+	v4_14u = 'v4.14u'
+	v4_14u_robust = 'v4.14u_robust'
 
 	tesseract = 'tesseract'
 

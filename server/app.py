@@ -91,6 +91,55 @@ def infer_ocr(ocr_request: OCRRequest) -> List[OCRImageResponse]:
 			)
 	return process_ocr_output(tmp.name)
 
+
+@app.post(
+	'/ocr/test',
+	tags=['Test OCR'],
+	response_model=List[OCRImageResponse],
+	response_model_exclude_none=True
+)
+def infer_ocr(
+	images: List[UploadFile] = Depends(save_uploaded_images),
+	language: LanguageEnum = Form(LanguageEnum.hi),
+	modality: ModalityEnum = Form(ModalityEnum.printed),
+	version: VersionEnum = Form(VersionEnum.v2),
+) -> List[OCRImageResponse]:
+	print(images)
+	_, language = process_language(language)
+	version = process_version(version)
+	modality = process_modality(modality)
+
+	verify_model(language, version, modality)
+	if 'bilingual' in version:
+		language = f'english_{language}'
+	print(language, version, modality)
+	folder = '/home/ocr/website/images'
+	if version == 'v0':
+		load_model(modality, language, version)
+		call(f'./infer_v0.sh {modality} {language}', shell=True)
+	elif version == 'v1_iitb':
+		call(f'./infer_v1_iitb.sh {modality} {language} {folder}', shell=True)
+	elif version == 'tesseract':
+		call_tesseract(language, folder)
+	else:
+		call(
+			f'./infer.sh {modality} {language} {folder} {version}',
+			shell=True
+		)
+	return process_ocr_output(folder)
+	# if version == 'v0':
+	# 	load_model(modality, language, version)
+	# 	call(f'./infer_v0.sh {modality} {language}', shell=True)
+	# elif version == 'v1_iitb':
+	# 	call(f'./infer_v1_iitb.sh {modality} {language} /home/ocr/website/images', shell=True)
+	# else:
+	# 	call(
+	# 		f'./infer.sh {modality} {language} /home/ocr/website/images {version}',
+	# 		shell=True
+	# 	)
+	# return process_ocr_output('/home/ocr/website/images')
+
+
 @app.post(
 	'/ocr/newpostprocess',
 	tags=['OCR'],
@@ -190,37 +239,3 @@ def OCR_postprocess(request: PostprocessRequest) -> List[PostprocessImageRespons
 		)
 	return ret
 
-
-
-@app.post(
-	'/ocr/test',
-	tags=['Test OCR'],
-	response_model=List[OCRImageResponse],
-	response_model_exclude_none=True
-)
-def infer_ocr(
-	images: List[UploadFile] = Depends(save_uploaded_images),
-	language: LanguageEnum = Form(LanguageEnum.hi),
-	modality: ModalityEnum = Form(ModalityEnum.printed),
-	version: VersionEnum = Form(VersionEnum.v2),
-) -> List[OCRImageResponse]:
-	print(images)
-	_, language = process_language(language)
-	version = process_version(version)
-	modality = process_modality(modality)
-
-	verify_model(language, version, modality)
-	if 'bilingual' in version:
-		language = f'english_{language}'
-	print(language, version, modality)
-	if version == 'v0':
-		load_model(modality, language, version)
-		call(f'./infer_v0.sh {modality} {language}', shell=True)
-	elif version == 'v1_iitb':
-		call(f'./infer_v1_iitb.sh {modality} {language} /home/ocr/website/images', shell=True)
-	else:
-		call(
-			f'./infer.sh {modality} {language} /home/ocr/website/images {version}',
-			shell=True
-		)
-	return process_ocr_output('/home/ocr/website/images')
