@@ -17,7 +17,7 @@ else
 	echo -e "DATA_DIR\t$DATA_DIR"
 fi
 
-docker run --rm --net host \
+docker run --rm --net host --memory=2048m \
 	-v $DATA_DIR:/data \
 	ocr:postprocess \
 	python infer.py $LANGUAGE

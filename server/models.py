@@ -103,6 +103,17 @@ class VersionEnum(str, Enum):
 	v4_hw = 'v4_hw'
 	v4_14u = 'v4.14u'
 	v4_14u_robust = 'v4.14u_robust'
+	v5 = 'v5'
+	v5_robust = 'v5_robust'
+	v5_bilingual = 'v5_bilingual'
+	v5_robustbilingual = 'v5_robustbilingual'
+	v5_robuster = 'v5_robuster'
+	v5_robusterbilingual = 'v5_robusterbilingual'
+	v5_urdu1 = 'v5_urdu1'
+	v5_urdu2 = 'v5_urdu2'
+	v5_urdu3 = 'v5_urdu3'
+	v5_urdur1 = 'v5_urdur1'
+	v5_urdur2 = 'v5_urdur2'
 
 	tesseract = 'tesseract'
 

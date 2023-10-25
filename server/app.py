@@ -117,6 +117,11 @@ def infer_ocr(
 	if version == 'v0':
 		load_model(modality, language, version)
 		call(f'./infer_v0.sh {modality} {language}', shell=True)
+	elif version == 'v5_urdu':
+		call(
+			f'./infer.sh printed urdu {folder} v5_urdu',
+			shell=True
+		)
 	elif version == 'v1_iitb':
 		call(f'./infer_v1_iitb.sh {modality} {language} {folder}', shell=True)
 	elif version == 'tesseract':
