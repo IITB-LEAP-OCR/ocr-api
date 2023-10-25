@@ -115,6 +115,18 @@ class VersionEnum(str, Enum):
 	v5_urdur1 = 'v5_urdur1'
 	v5_urdur2 = 'v5_urdur2'
 
+	# First V5 Upnishad Finetune
+	v5_1_1u = 'v5.1.1u'
+	v5_1_2u = 'v5.1.2u'
+	v5_1_3u = 'v5.1.3u'
+	v5_1_1u_robust = 'v5.1.1u_robust'
+	v5_1_2u_robust = 'v5.1.2u_robust'
+	v5_1_1u_bilingual = 'v5.1.1u_bilingual'
+	v5_1_2u_bilingual = 'v5.1.2u_bilingual'
+	v5_1_3u_bilingual = 'v5.1.3u_bilingual'
+	v5_1_1u_robustbilingual = 'v5.1.1u_robustbilingual'
+	v5_1_2u_robustbilingual = 'v5.1.2u_robustbilingual'
+
 	tesseract = 'tesseract'
 
 
