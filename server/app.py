@@ -15,6 +15,7 @@ from .helper import *
 from .models import OCRImageResponse, OCRRequest, PostprocessRequest
 from .modules.cegis.routes import router as cegis_router
 from .modules.ulca.routes import router as ulca_router
+from .modules.layout_preserve.routes import router as layout_router
 
 app = FastAPI(
 	title='OCR API',
@@ -32,7 +33,7 @@ app.add_middleware(
 
 app.include_router(cegis_router)
 app.include_router(ulca_router)
-
+app.include_router(layout_router)
 
 
 @app.middleware('http')
