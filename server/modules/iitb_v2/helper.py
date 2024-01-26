@@ -121,7 +121,6 @@ def process_config(config: OCRConfig):
 		language_code = config.languages[0].sourceLanguage.value
 		language = LANGUAGES[language_code]
 		modality = config.modality.value
-		if modality == 'print': modality = 'printed'
 		dlevel = config.detectionLevel.value
 	except Exception as e:
 		print(e)

@@ -8,6 +8,11 @@ class LevelEnum(str, Enum):
 	word = 'word'
 	char = 'char'
 
+class ModalityEnum(str, Enum):
+	printed = 'printed'
+	handwritten = 'handwritten'
+	scenetext = 'scenetext'
+
 class LanguageEnum(str, Enum):
 	en = 'en'	# english
 	hi = 'hi'	# hindi
@@ -23,11 +28,6 @@ class LanguageEnum(str, Enum):
 	ori = 'or'	# oriya
 	mni = 'mni'	# manipuri
 	ur = 'ur'	# urdu
-
-class ModalityEnum(str, Enum):
-	print = 'print'
-	handwritten = 'handwritten'
-	scenetext = 'scenetext'
 
 class DetectionLevelEnum(str, Enum):
 	word = 'word'
@@ -62,7 +62,7 @@ class OCRConfig(BaseModel):
 		description=''
 	)
 	modality: Optional[ModalityEnum] = Field(
-		ModalityEnum.print,
+		ModalityEnum.printed,
 		description=''
 	)
 	languages: List[LanguagePair]
