@@ -2,7 +2,7 @@ MODEL_FOLDER='/media/shourya/B018CE3C18CE0178/IITB_OCR/temp_models'
 IMAGE_FOLDER='/media/shourya/B018CE3C18CE0178/IITB_OCR/layout-parser/images'
 LOGS_FOLDER='/media/shourya/B018CE3C18CE0178/IITB_OCR/layout-parser/images'
 DOCKER_NAME="iitb-ocr"
-iitb_ocr_models_path="ocr-api/server/modules/iitb_v2/iitb_ocr_models.txt"
+models_txt_path="ocr-api/server/modules/iitb_v2/iitb_ocr_models.txt"
 
 
 PORT = 8058
