@@ -17,11 +17,7 @@ from PIL import Image
 import re
 
 from .models import *
-from ...config import *
-
-MODEL_FOLDER='/media/shourya/B018CE3C18CE0178/IITB_OCR/temp_models'
-IMAGE_FOLDER='/media/shourya/B018CE3C18CE0178/IITB_OCR/layout-parser/images'
-LOGS_FOLDER='/media/shourya/B018CE3C18CE0178/IITB_OCR/layout-parser/images'
+from .config import *
 
 def download_models_from_file(file_path, output_folder):
     call(f'wget -i {file_path} -P {output_folder}',shell=True)

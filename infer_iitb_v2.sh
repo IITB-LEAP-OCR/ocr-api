@@ -2,8 +2,7 @@ MODALITY="$1"
 LANGUAGE="$2"
 DATA_DIR="$3"
 MODEL_DIR="$4"
-
-DOCKER_NAME="iitb-ocr"
+DOCKER_NAME="$5
 
 echo "Performing Inference for $LANGUAGE $MODALITY Task"
 
