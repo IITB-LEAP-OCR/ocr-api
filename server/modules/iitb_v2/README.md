@@ -22,8 +22,7 @@ Where,
 
 ## Note
 - Refer to the README in the docker- repo directory for instructions on dockerization.
-- Update the IMAGE_FOLDER, MODEL_FOLDER, LOGS_FOLDER paths in helper.py
-- Also Update the name of the Docker Container in infer_iitb_v2.sh
+- Update the IMAGE_FOLDER, MODEL_FOLDER, LOGS_FOLDER ,DOCKER_NAME, models_txt_path in config.py
 - URLs added in ocr-api: /ocr/iitb/v2/
 
 ## Sample Request
