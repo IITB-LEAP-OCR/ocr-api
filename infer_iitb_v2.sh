@@ -22,7 +22,7 @@ else
 	echo -e "DATA_DIR\t$DATA_DIR"
 fi
 
-sudo docker run --rm --net host \
+docker run --rm --gpus all --net host \
     -v $MODEL_DIR:/root/.cache/doctr/models \
 	-v $MODEL_DIR:/models \
 	-v $DATA_DIR:/data \
