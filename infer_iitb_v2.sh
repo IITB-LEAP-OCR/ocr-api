@@ -2,7 +2,7 @@ MODALITY="$1"
 LANGUAGE="$2"
 DATA_DIR="$3"
 MODEL_DIR="$4"
-DOCKER_NAME="$5
+DOCKER_NAME="$5"
 
 echo "Performing Inference for $LANGUAGE $MODALITY Task"
 
@@ -22,7 +22,7 @@ else
 	echo -e "DATA_DIR\t$DATA_DIR"
 fi
 
-docker run --rm --gpus all --net host \
+sudo docker run --rm --net host \
     -v $MODEL_DIR:/root/.cache/doctr/models \
 	-v $MODEL_DIR:/models \
 	-v $DATA_DIR:/data \
